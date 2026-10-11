@@ -5,6 +5,7 @@ import { Layout, Section } from "../components/Layout";
 import { Reveal, RevealItem } from "../components/Reveal";
 import { DepthCard } from "../components/DepthCard";
 import { Faq } from "../components/Faq";
+import { propertyMedia } from "../lib/property-media";
 import { OG_IMAGE, abs } from "../lib/seo";
 
 export const Route = createFileRoute("/services")({
@@ -48,36 +49,43 @@ const services = [
     icon: Home,
     title: "Residential Property Development",
     desc: "Design-led homes with modern infrastructure and long-tenure liveability.",
+    img: propertyMedia["1600585154526-990dced4db0d"],
   },
   {
     icon: Building,
     title: "Commercial Property Development",
     desc: "Grade-A workspaces along Mumbai's high-traffic business corridors.",
+    img: propertyMedia["1497366216548-37526070297c"],
   },
   {
     icon: Map,
     title: "Plot and Land Sales",
     desc: "Verified titles, RERA-aligned parcels, transparent handover documentation.",
+    img: propertyMedia["1500382017468-9049fed747ef"],
   },
   {
     icon: Handshake,
     title: "Property Buying & Selling",
     desc: "End-to-end concierge for negotiations, diligence, and legal closure.",
+    img: propertyMedia["1560184897-ae75f418493e"],
   },
   {
     icon: TrendingUp,
     title: "Real Estate Investment Consulting",
     desc: "Yield-mapped strategies for individual and institutional portfolios.",
+    img: propertyMedia["1560448204-e02f11c3d0e2"],
   },
   {
     icon: Megaphone,
     title: "Project Marketing & Sales",
     desc: "Positioning, launch collateral, and channel activation for developers.",
+    img: propertyMedia["1600607687939-ce8a6c25118c"],
   },
   {
     icon: ShieldCheck,
     title: "Property Management Services",
     desc: "Tenant curation, compliance, and asset upkeep — fully outsourced.",
+    img: propertyMedia["1505691938895-1758d7feb511"],
   },
 ];
 
@@ -108,19 +116,31 @@ function ServicesPage() {
             <DepthCard
               key={i}
               lift={8}
-              className="bg-background p-8 group hover:bg-gold/10 transition-colors relative"
+              className={`${
+                i === 0 ? "md:col-span-2 lg:col-span-2" : ""
+              } bg-background group relative flex flex-col transition-colors hover:bg-gold/10`}
             >
-              <div className="absolute top-6 right-6 text-[10px] tracking-[0.32em] text-gold/50 depth-float">
-                0{i + 1}
+              <div className={`relative overflow-hidden ${i === 0 ? "aspect-[21/9]" : "aspect-[16/9]"}`}>
+                <img
+                  data-motion="skip"
+                  src={s.img}
+                  alt={s.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
               </div>
-              <s.icon
-                className="h-10 w-10 text-gold depth-float"
-                strokeWidth={1.4}
-                style={{ transitionDelay: "50ms" }}
-              />
-              <h3 className="mt-6 text-xl font-bold tracking-tight">{s.title}</h3>
-              <p className="mt-3 text-sm text-slate-muted leading-relaxed">{s.desc}</p>
-              <div className="mt-6 h-px w-8 bg-gold group-hover:w-20 transition-all duration-500" />
+              <div className="p-8 relative flex-1 flex flex-col">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-gold/40 bg-card shadow-lg">
+                    <s.icon className="h-7 w-7 text-gold" strokeWidth={1.4} />
+                  </div>
+                  <span className="text-[10px] tracking-[0.32em] text-gold/50">0{i + 1}</span>
+                </div>
+                <h3 className="mt-6 text-xl font-bold tracking-tight">{s.title}</h3>
+                <p className="mt-3 text-sm text-slate-muted leading-relaxed">{s.desc}</p>
+                <div className="mt-auto pt-6 h-px w-8 bg-gold group-hover:w-20 transition-all duration-500" />
+              </div>
             </DepthCard>
           ))}
         </Reveal>

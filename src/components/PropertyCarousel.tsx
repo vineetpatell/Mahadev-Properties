@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
+  ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Pause,
-  Play,
-  ArrowUpRight,
   MapPin,
   MessageCircle,
+  Pause,
+  Play,
 } from "lucide-react";
 import { properties } from "../lib/properties";
 import { Button } from "./ui/button";
@@ -22,22 +22,26 @@ const saleFeatured = [
   properties[10],
 ].filter((p) => p !== undefined);
 
-const rentFeatured = properties.filter((p) => p.listing === "rent");
-
-type PropertyCarouselProps = {
-  listing?: "sale" | "rent";
-};
-
-export function PropertyCarousel({ listing = "sale" }: PropertyCarouselProps) {
-  const items = listing === "rent" ? rentFeatured : saleFeatured;
+/**
+ * SALE carousel — a light "magazine shelf": a horizontal filmstrip of tall
+ * portrait cards. GSAP slides the strip so the active card always sits dead
+ * centre, lifted, full-colour and sharp, while its neighbours sit back,
+ * flattened and desaturated. The RENT carousel uses a completely different
+ * design and animation (see RentCarousel.tsx).
+ */
+export function PropertyCarousel() {
+  const items = saleFeatured;
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
+  const [step, setStep] = useState(364);
   const stage = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
   const touch = useRef(0);
   const resume = useRef(0);
   const advance = (direction: number) =>
     setIndex((i) => (i + direction + items.length) % items.length);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setReduced(mq.matches);
@@ -45,62 +49,81 @@ export function PropertyCarousel({ listing = "sale" }: PropertyCarouselProps) {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
+
+  // Measure card + gap so the strip can be positioned without GSAP
+  // (used as the reduced-motion fallback and by the shelf animation).
+  useEffect(() => {
+    const measure = () => {
+      const card = track.current?.querySelector<HTMLElement>("[data-shelf-card]");
+      if (!card) return;
+      const gap = parseFloat(getComputedStyle(track.current!).columnGap || "0") || 0;
+      setStep(card.offsetWidth + gap);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
   const hold = () => {
     window.clearTimeout(resume.current);
     stage.current?.setAttribute("data-hold", "true");
   };
   const release = () => {
     window.clearTimeout(resume.current);
-    resume.current = window.setTimeout(() => stage.current?.removeAttribute("data-hold"), 1200);
+    resume.current = window.setTimeout(
+      () => stage.current?.removeAttribute("data-hold"),
+      1200,
+    );
   };
   useEffect(() => () => window.clearTimeout(resume.current), []);
+
   useEffect(() => {
     if (paused || reduced) return;
     const timer = window.setInterval(() => {
       if (stage.current?.hasAttribute("data-hold")) return;
       advance(1);
-    }, 2200);
+    }, 3200);
     return () => window.clearInterval(timer);
   }, [paused, reduced]);
+
+  // Shelf animation — slide the strip to centre the active card and
+  // restyle each card relative to it.
   useEffect(() => {
     if (!motionOk()) return;
     let ctx: { revert: () => void } | undefined;
     let cancelled = false;
     void gsapReady().then(({ gsap }) => {
-      if (cancelled || !stage.current) return;
+      if (cancelled || !track.current || !stage.current) return;
+      const trackEl = track.current;
       ctx = gsap.context(() => {
-        const cards = stage.current?.querySelectorAll<HTMLElement>("[data-carousel-card]");
-        cards?.forEach((card, i) => {
-          let offset = (i - index + items.length) % items.length;
-          if (offset > items.length / 2) offset -= items.length;
-          const mobile = window.innerWidth < 768;
-          const spread = mobile ? 104 : 62;
-          const abs = Math.abs(offset);
-          const dir = offset === 0 ? 0 : offset / abs;
+        const cards = Array.from(trackEl.querySelectorAll<HTMLElement>("[data-shelf-card]"));
+        const positionTrack = () => {
+          const gap = parseFloat(getComputedStyle(trackEl).columnGap || "0") || 0;
+          const cardWidth = cards[0]?.offsetWidth ?? 340;
+          return -(index * (cardWidth + gap));
+        };
+        gsap.to(trackEl, {
+          x: positionTrack,
+          duration: reduced ? 0 : 0.9,
+          ease: "expo.out",
+          overwrite: true,
+        });
+        cards.forEach((card, i) => {
+          const isCenter = i === index;
+          const distance = Math.abs(i - index);
           gsap.to(card, {
-            xPercent: offset * spread,
-            y: abs === 0 ? 0 : abs * 26,
-            rotation: offset === 0 ? 0 : dir * (mobile ? 4 : 7),
-            scale: offset === 0 ? 1 : Math.max(0.78, 1 - abs * 0.09),
-            opacity: abs <= 1 ? 1 : 0,
-            filter: offset === 0 ? "blur(0px)" : `blur(${Math.min(abs * 1.5, 3)}px)`,
-            duration: reduced ? 0 : 0.85,
+            y: isCenter ? -16 : 0,
+            scale: isCenter ? 1 : 0.94,
+            opacity: distance > 2 ? 0.35 : 1,
+            filter: isCenter ? "grayscale(0)" : "grayscale(0.7)",
+            duration: reduced ? 0 : 0.75,
             ease: "expo.out",
             overwrite: true,
           });
-          card.style.zIndex = String(10 - abs);
-          card.inert = offset !== 0;
-          const photo = card.querySelector<HTMLElement>("[data-carousel-image]");
-          if (photo) {
-            gsap.to(photo, {
-              xPercent: offset === 0 ? 0 : dir * -10,
-              scale: offset === 0 ? 1.06 : 1.16,
-              duration: reduced ? 0 : 0.85,
-              ease: "expo.out",
-              overwrite: true,
-            });
-          }
         });
+        const onResize = () => gsap.to(trackEl, { x: positionTrack(), duration: 0 });
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
       }, stage);
     });
     return () => {
@@ -112,33 +135,32 @@ export function PropertyCarousel({ listing = "sale" }: PropertyCarouselProps) {
   return (
     <section
       aria-roledescription="carousel"
-      aria-label={listing === "rent" ? "Featured rent properties" : "Featured sale properties"}
-      className="property-showcase py-12 md:py-20 overflow-hidden"
+      aria-label="Featured sale properties"
+      className="py-16 md:py-24 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 flex flex-wrap items-end justify-between gap-5">
         <div>
-          <div className="text-xs text-gold">
-            {listing === "rent" ? "RENT / SELECTED SPACES" : "SALE / SELECTED SPACES"}
+          <div className="flex items-center gap-3 text-xs tracking-[0.4em] text-gold">
+            <span className="h-px w-10 bg-gold" /> SALE / OWNERSHIP EDIT
           </div>
-          <h2 className="text-3xl md:text-5xl font-semibold mt-3">
-            {listing === "rent" ? "Properties on rent." : "Properties for sale."}
+          <h2 className="text-3xl md:text-5xl font-black tracking-[-0.03em] mt-4">
+            Properties for sale.
           </h2>
+          <p className="mt-3 max-w-md text-sm text-slate-muted">
+            A curated shelf of resale and ready-to-move homes across Malad West —
+            browse the strip, pick a card.
+          </p>
         </div>
         <Button asChild variant="link">
-          {listing === "rent" ? (
-            <Link to="/rent">
-              All rental properties <ArrowUpRight />
-            </Link>
-          ) : (
-            <Link to="/sale">
-              All sale properties <ArrowUpRight />
-            </Link>
-          )}
+          <Link to="/sale">
+            All sale properties <ArrowUpRight />
+          </Link>
         </Button>
       </div>
+
       <div
         ref={stage}
-        className="carousel-stage relative mt-9"
+        className="sale-shelf relative mt-10"
         onMouseEnter={hold}
         onMouseLeave={release}
         onFocusCapture={hold}
@@ -155,68 +177,84 @@ export function PropertyCarousel({ listing = "sale" }: PropertyCarouselProps) {
           release();
         }}
       >
-        {items.map((p, i) => (
-          <article
-            key={p.id}
-            data-carousel-card
-            aria-hidden={i !== index}
-            className="carousel-card absolute top-0 border border-border bg-card overflow-hidden"
-          >
-            <div className="relative carousel-photo">
-              <img
-                data-carousel-image
-                src={p.image}
-                alt={p.name}
-                className="w-full h-full object-cover"
-              />
-              <Link
-                to="/property/$id"
-                params={{ id: p.id }}
-                aria-label={`View ${p.name} details`}
-                className="absolute inset-0"
-              />
-              <div className="absolute top-4 left-4 bg-card/95 px-3 py-2 text-xs text-foreground">
-                {p.status}
-              </div>
-              <div className="absolute top-4 right-4">
-                <SaveProperty id={p.id} />
-              </div>
-            </div>
-            <div className="px-5 py-5 md:px-7">
-              <div className="flex justify-between items-start gap-3">
-                <div className="min-w-0">
-                  <p className="flex gap-1 items-center text-xs text-muted-foreground">
-                    <MapPin className="w-3 h-3" />
-                    {p.location} · {p.type}
-                  </p>
-                  <h3 className="mt-2 text-xl md:text-2xl font-semibold leading-tight">{p.name}</h3>
+        <div
+          ref={track}
+          className={`sale-shelf-track ${reduced ? "shelf-slide" : ""}`}
+          style={reduced ? { transform: `translateX(${-index * step}px)` } : undefined}
+        >
+          {items.map((p, i) => (
+            <article
+              key={p.id}
+              data-shelf-card
+              onClick={() => setIndex(i)}
+              className={`sale-card group relative flex flex-col border bg-card overflow-hidden cursor-pointer transition-colors ${
+                i === index ? "border-gold/50" : "border-border"
+              }`}
+              style={{ boxShadow: i === index ? "var(--shadow-elegant)" : undefined }}
+            >
+              <div className="relative flex-1 min-h-0 overflow-hidden">
+                <img
+                  data-motion="skip"
+                  src={p.image}
+                  alt={p.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-obsidian/20" />
+                <Link
+                  to="/property/$id"
+                  params={{ id: p.id }}
+                  aria-label={`View ${p.name} details`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute inset-0 z-10"
+                />
+                <div className="absolute top-4 left-4 bg-card/95 px-3 py-2 text-xs text-foreground z-20">
+                  {p.status}
                 </div>
-                <span className="text-base md:text-xl text-gold font-semibold whitespace-nowrap">
-                  {p.price}
-                </span>
+                <div className="absolute top-4 right-4 z-20" onClick={(e) => e.stopPropagation()}>
+                  <SaveProperty id={p.id} />
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 z-20 flex items-end justify-between gap-3">
+                  <span className="text-[10px] tracking-[0.28em] text-gold bg-card/95 px-3 py-1.5">
+                    0{i + 1} / 0{items.length}
+                  </span>
+                  <span className="bg-gold text-primary-foreground px-3 py-1.5 text-sm font-semibold whitespace-nowrap">
+                    {p.price}
+                  </span>
+                </div>
               </div>
-              <div className="mt-4 flex justify-between items-center">
-                <Button asChild variant="link" className="px-0">
-                  <Link to="/property/$id" params={{ id: p.id }}>
-                    Explore <ArrowUpRight />
-                  </Link>
-                </Button>
-                <Button asChild size="icon" variant="outline" title="WhatsApp enquiry">
-                  <a
-                    href={`https://wa.me/919152383586?text=${encodeURIComponent(`Hi, please share details for ${p.name}.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Enquire about ${p.name} on WhatsApp`}
-                  >
-                    <MessageCircle />
-                  </a>
-                </Button>
+              <div className="p-5 border-t border-border">
+                <p className="flex gap-1 items-center text-[10px] tracking-[0.24em] text-slate-muted">
+                  <MapPin className="w-3 h-3 text-gold" />
+                  {p.location.toUpperCase()} · {p.type}
+                </p>
+                <h3 className="mt-2 text-lg font-bold leading-tight line-clamp-2 min-h-[3.25rem]">
+                  {p.name}
+                </h3>
+                <div className="mt-3 flex items-center justify-between">
+                  <Button asChild variant="link" className="px-0 text-xs tracking-[0.2em]">
+                    <Link to="/property/$id" params={{ id: p.id }}>
+                      Explore <ArrowUpRight />
+                    </Link>
+                  </Button>
+                  <Button asChild size="icon" variant="outline" title="WhatsApp enquiry">
+                    <a
+                      href={`https://wa.me/919152383586?text=${encodeURIComponent(`Hi, please share details for ${p.name}.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Enquire about ${p.name} on WhatsApp`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MessageCircle />
+                    </a>
+                  </Button>
+                </div>
               </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          ))}
+        </div>
       </div>
-      <div className="mx-auto max-w-7xl px-6 mt-6 flex items-center justify-center gap-4">
+
+      <div className="mx-auto max-w-7xl px-6 mt-8 flex items-center justify-center gap-4">
         <Button
           variant="outline"
           size="icon"

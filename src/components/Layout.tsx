@@ -44,13 +44,15 @@ function Navbar() {
     <header className="fixed top-0 inset-x-0 z-50 px-3 md:px-6 pt-3 md:pt-4">
       <div className="relative mx-auto max-w-6xl">
         {/* Backdrop is its own layer so the bar no longer needs overflow-hidden
-            (which used to clip the Properties dropdown into an overlapping sliver). */}
+            (which used to clip the Properties dropdown into an overlapping sliver).
+            A constant, light blur avoids re-rasterising a 2xl blur on every
+            scroll frame (a big source of scroll jank on the listing pages). */}
         <div
           aria-hidden
-          className={`absolute inset-0 rounded-full border pointer-events-none ${
+          className={`absolute inset-0 rounded-full border pointer-events-none backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300 ${
             scrolled
-              ? "backdrop-blur-2xl bg-card/90 border-gold/30 shadow-[0_18px_50px_-20px_color-mix(in_oklab,var(--foreground)_30%,transparent)]"
-              : "bg-card/70 backdrop-blur-md border-gold/15 shadow-[0_10px_36px_-22px_color-mix(in_oklab,var(--foreground)_24%,transparent)]"
+              ? "bg-card/92 border-gold/30 shadow-[0_18px_50px_-20px_color-mix(in_oklab,var(--foreground)_30%,transparent)]"
+              : "bg-card/70 border-gold/15 shadow-[0_10px_36px_-22px_color-mix(in_oklab,var(--foreground)_24%,transparent)]"
           }`}
         />
         <div

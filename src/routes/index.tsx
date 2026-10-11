@@ -7,6 +7,7 @@ import { MagneticButton } from "../components/MagneticButton";
 import { Ticker } from "../components/Ticker";
 import { Reveal, RevealItem } from "../components/Reveal";
 import { PropertyCarousel } from "../components/PropertyCarousel";
+import { RentCarousel } from "../components/RentCarousel";
 import { ArchitecturalShowcase } from "../components/ArchitecturalShowcase";
 
 export const Route = createFileRoute("/")({
@@ -30,8 +31,8 @@ function HomePage() {
       <ArchitecturalShowcase />
       <Metrics />
       <Ticker reverse />
-      <PropertyCarousel listing="sale" />
-      <PropertyCarousel listing="rent" />
+      <PropertyCarousel />
+      <RentCarousel />
       <ReviewsBoard />
     </Layout>
   );

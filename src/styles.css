@@ -245,20 +245,62 @@
   z-index: 2;
   width: 100%;
 }
-.carousel-stage {
-  height: 480px;
-  perspective: 1400px;
+/* SALE carousel — horizontal "magazine shelf" of portrait cards */
+.sale-shelf {
+  display: flex;
+  justify-content: center;
+  height: 560px;
+  overflow: hidden;
   touch-action: pan-y;
+  position: relative;
 }
-.carousel-card {
-  left: calc(50% - 260px);
-  width: 520px;
-  transform-style: preserve-3d;
+.sale-shelf-track {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+  width: max-content;
+  height: 100%;
+  will-change: transform;
+}
+.shelf-slide {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sale-card {
+  flex: none;
+  width: 340px;
   border-radius: 4px;
-  box-shadow: var(--shadow-elegant);
 }
-.carousel-photo {
-  height: 300px;
+.sale-shelf::before,
+.sale-shelf::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  z-index: 5;
+  pointer-events: none;
+}
+.sale-shelf::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--background), transparent);
+}
+.sale-shelf::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--background), transparent);
+}
+
+/* RENT carousel — dark bronze split rail (deliberately opposite of the SALE shelf) */
+.rent-band {
+  background:
+    radial-gradient(130% 100% at 82% 8%, oklch(0.36 0.055 64 / 60%), transparent 62%),
+    linear-gradient(
+      180deg,
+      oklch(0.25 0.042 58) 0%,
+      oklch(0.3 0.05 61) 55%,
+      oklch(0.25 0.042 58) 100%
+    );
+  border-top: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
 }
 .landmark-panel {
   width: 70%;
@@ -295,15 +337,11 @@
   .home-hero::after {
     background: linear-gradient(90deg, oklch(0.97 0.014 88 / 96%), oklch(0.97 0.014 88 / 48%));
   }
-  .carousel-stage {
-    height: 405px;
+  .sale-shelf {
+    height: 620px;
   }
-  .carousel-card {
-    left: calc(50% - 42vw);
-    width: 84vw;
-  }
-  .carousel-photo {
-    height: 220px;
+  .sale-card {
+    width: 76vw;
   }
   main .p-10 {
     padding: 1.5rem;
