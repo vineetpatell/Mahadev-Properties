@@ -1,0 +1,247 @@
+import { propertyMedia } from "./property-media";
+export type PropertyType =
+  | "1RK"
+  | "1BHK"
+  | "2BHK"
+  | "3BHK"
+  | "Commercial"
+  | "Flats for Sale"
+  | "Villas/Houses"
+  | "Plots";
+
+export type Property = {
+  id: string;
+  name: string;
+  type: PropertyType;
+  price: string;
+  location: string;
+  address: string;
+  area: string;
+  facing: string;
+  vastu: string;
+  configuration: string;
+  carpetArea: string;
+  furnished: string;
+  parking: string;
+  status: "Ready to Move" | "Under Construction" | "Newly Launched" | "Resale";
+  image: string;
+  gallery: string[];
+  tagline: string;
+};
+
+const img = (seed: string) => propertyMedia[seed] ?? "";
+
+export const properties: Property[] = [
+  {
+    id: "mp-001",
+    name: "Cozy 1RK Studio Apartment",
+    type: "1RK",
+    price: "₹ 38.5 L",
+    location: "Malad West",
+    address: "Sundar Nagar, Malad West, Mumbai 400064",
+    area: "320 sq.ft",
+    facing: "East Facing",
+    vastu: "Vastu Compliant",
+    configuration: "1 RK · 1 Bath",
+    carpetArea: "290 sq.ft",
+    furnished: "Semi-Furnished",
+    parking: "1 Two-Wheeler",
+    status: "Ready to Move",
+    image: img("1560448204-e02f11c3d0e2"),
+    gallery: [img("1560448204-e02f11c3d0e2"), img("1522708323590-d24dbb6b0267"), img("1505691938895-1758d7feb511")],
+    tagline: "320 sq.ft • East Facing • Ideal for Professionals",
+  },
+  {
+    id: "mp-002",
+    name: "Modern 1BHK Residential Apartment",
+    type: "1BHK",
+    price: "₹ 72 L",
+    location: "Sundar Nagar",
+    address: "P1 Deep Sadan Enclave, Malad West, Mumbai 400064",
+    area: "540 sq.ft",
+    facing: "North-East Facing",
+    vastu: "Vastu Compliant",
+    configuration: "1 BHK · 1 Bath",
+    carpetArea: "490 sq.ft",
+    furnished: "Semi-Furnished",
+    parking: "1 Covered",
+    status: "Ready to Move",
+    image: img("1502672260266-1c1ef2d93688"),
+    gallery: [img("1502672260266-1c1ef2d93688"), img("1493809842364-78817add7ffb"), img("1560184897-ae75f418493e")],
+    tagline: "540 sq.ft • Excellent Natural Light • NE Facing",
+  },
+  {
+    id: "mp-003",
+    name: "Premium 2BHK Luxury Flat",
+    type: "2BHK",
+    price: "₹ 1.42 Cr",
+    location: "Malad West",
+    address: "Deep Sadan Vicinity, Malad West, Mumbai 400064",
+    area: "950 sq.ft",
+    facing: "East Facing",
+    vastu: "Vastu Compliant",
+    configuration: "2 BHK · 2 Bath · Balcony",
+    carpetArea: "820 sq.ft",
+    furnished: "Semi-Furnished",
+    parking: "1 Covered · 1 Open",
+    status: "Ready to Move",
+    image: img("1600585154340-be6161a56a0c"),
+    gallery: [img("1600585154340-be6161a56a0c"), img("1600607687939-ce8a6c25118c"), img("1600566753190-17f0baa2a6c3")],
+    tagline: "950 sq.ft • Spacious Balconies • Ready to Move",
+  },
+  {
+    id: "mp-004",
+    name: "Luxury 3BHK Family Villa",
+    type: "Villas/Houses",
+    price: "₹ 2.85 Cr",
+    location: "Malad West",
+    address: "Marve Road Enclave, Malad West, Mumbai 400064",
+    area: "1580 sq.ft",
+    facing: "North Facing",
+    vastu: "Vastu Compliant",
+    configuration: "3 BHK · 3 Bath · Deck",
+    carpetArea: "1360 sq.ft",
+    furnished: "Semi-Furnished Luxury",
+    parking: "2 Private Covered",
+    status: "Ready to Move",
+    image: img("1613490493576-7fde63acd811"),
+    gallery: [img("1613490493576-7fde63acd811"), img("1600566753086-00f18fb6b3ea"), img("1600607687644-c7171b42498f")],
+    tagline: "1580 sq.ft • Private Parking • Semi-Furnished Luxury",
+  },
+  {
+    id: "mp-005",
+    name: "High-Yield Commercial Office Space",
+    type: "Commercial",
+    price: "₹ 3.10 Cr",
+    location: "Main Road Malad",
+    address: "S.V. Road, Malad West, Mumbai 400064",
+    area: "1200 sq.ft",
+    facing: "Main Road Facing",
+    vastu: "Vastu Compliant",
+    configuration: "Open Floor · 2 Cabins · Pantry",
+    carpetArea: "1080 sq.ft",
+    furnished: "Modern Glass Facade",
+    parking: "3 Reserved",
+    status: "Ready to Move",
+    image: img("1497366216548-37526070297c"),
+    gallery: [img("1497366216548-37526070297c"), img("1497366754035-f200968a6e72"), img("1524758631624-e2822e304c36")],
+    tagline: "1200 sq.ft • Main Road • Grade-A Building",
+  },
+  {
+    id: "mp-006",
+    name: "High-Floor 2BHK Flat for Sale",
+    type: "Flats for Sale",
+    price: "₹ 1.98 Cr",
+    location: "Malad West",
+    address: "Orchid Tower, Malad West, Mumbai 400064",
+    area: "1120 sq.ft",
+    facing: "West Facing · Skyline View",
+    vastu: "Vastu Compliant",
+    configuration: "2 BHK · 3 Bath",
+    carpetArea: "980 sq.ft",
+    furnished: "Fully Furnished",
+    parking: "2 Covered",
+    status: "Ready to Move",
+    image: img("1512917774080-9991f1c4c750"),
+    gallery: [img("1512917774080-9991f1c4c750"), img("1600585154526-990dced4db0d"), img("1600585154084-4e5fe7c39198")],
+    tagline: "1120 sq.ft • Skyline View • Immediate Registration",
+  },
+  {
+    id: "mp-007",
+    name: "Elite Corporate Retail Showroom",
+    type: "Commercial",
+    price: "₹ 4.50 Cr",
+    location: "Malad West",
+    address: "Link Road Ground Floor, Malad West, Mumbai 400064",
+    area: "1450 sq.ft",
+    facing: "Corner · Double Frontage",
+    vastu: "Vastu Compliant",
+    configuration: "Ground Floor · Double Height",
+    carpetArea: "1320 sq.ft",
+    furnished: "Bare Shell",
+    parking: "4 Reserved",
+    status: "Ready to Move",
+    image: img("1441986300917-64674bd600d8"),
+    gallery: [img("1441986300917-64674bd600d8"), img("1519567241046-7f570eee3ce6"), img("1555529669-e69e7aa0ba9a")],
+    tagline: "1450 sq.ft • Ground Floor • Heavy Footfalls",
+  },
+  {
+    id: "mp-008",
+    name: "Exclusive Residential Investment Plot",
+    type: "Plots",
+    price: "₹ 5.20 Cr",
+    location: "Malad West",
+    address: "Developing Corridor, Malad West, Mumbai 400064",
+    area: "2400 sq.ft",
+    facing: "30 ft Road Facing",
+    vastu: "Vastu Compliant",
+    configuration: "Freehold · Clear Titles",
+    carpetArea: "2400 sq.ft",
+    furnished: "N/A",
+    parking: "On-Plot",
+    status: "Newly Launched",
+    image: img("1500382017468-9049fed747ef"),
+    gallery: [img("1500382017468-9049fed747ef"), img("1466692476868-aef1dfb1e735"), img("1501084817091-a4f3d1d19e07")],
+    tagline: "2400 sq.ft • Clear Titles • Fast Developing Zone",
+  },
+  {
+    id: "mp-009",
+    name: "Ultra-Luxury 3BHK Penthouse",
+    type: "3BHK",
+    price: "₹ 6.80 Cr",
+    location: "Malad West",
+    address: "Skyline Crest, Malad West, Mumbai 400064",
+    area: "2100 sq.ft",
+    facing: "South-West · Sea Glimpse",
+    vastu: "Vastu Compliant",
+    configuration: "3 BHK · 4 Bath · Private Terrace",
+    carpetArea: "1820 sq.ft",
+    furnished: "Fully Furnished",
+    parking: "3 Covered",
+    status: "Under Construction",
+    image: img("1600596542815-ffad4c1539a9"),
+    gallery: [img("1600596542815-ffad4c1539a9"), img("1600607687920-4e2a09cf159d"), img("1600585154526-990dced4db0d")],
+    tagline: "2100 sq.ft • Private Terrace Deck • Penthouse",
+  },
+  {
+    id: "mp-010",
+    name: "Compact 1BHK Flat for Sale",
+    type: "Flats for Sale",
+    price: "₹ 62 L",
+    location: "Near Malad Station",
+    address: "Station Road, Malad West, Mumbai 400064",
+    area: "460 sq.ft",
+    facing: "East Facing",
+    vastu: "Vastu Compliant",
+    configuration: "1 BHK · 1 Bath",
+    carpetArea: "410 sq.ft",
+    furnished: "Semi-Furnished",
+    parking: "1 Two-Wheeler",
+    status: "Resale",
+    image: img("1522708323590-d24dbb6b0267"),
+    gallery: [img("1522708323590-d24dbb6b0267"), img("1502672260266-1c1ef2d93688"), img("1505691938895-1758d7feb511")],
+    tagline: "460 sq.ft • Near Malad Station • Affordable Class",
+  },
+  {
+    id: "mp-011",
+    name: "Signature Independent House",
+    type: "Villas/Houses",
+    price: "₹ 4.20 Cr",
+    location: "Malad West",
+    address: "Palm Grove Lane, Malad West, Mumbai 400064",
+    area: "1850 sq.ft",
+    facing: "North-East · Garden",
+    vastu: "Vastu Compliant",
+    configuration: "4 BHK · 4 Bath · Private Garden",
+    carpetArea: "1620 sq.ft",
+    furnished: "Semi-Furnished",
+    parking: "2 Covered · 2 Open",
+    status: "Ready to Move",
+    image: img("1600585154526-990dced4db0d"),
+    gallery: [img("1600585154526-990dced4db0d"), img("1613490493576-7fde63acd811"), img("1600566753086-00f18fb6b3ea")],
+    tagline: "1850 sq.ft • Private Garden • Independent House",
+  },
+];
+
+export const findProperty = (id: string | undefined): Property =>
+  properties.find((p) => p.id === id) ?? properties[0];
