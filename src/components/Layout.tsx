@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MessageCircle, MapPin, Phone, Mail, ArrowUpRight, Menu } from "lucide-react";
+import { MessageCircle, MapPin, Phone, Mail, ArrowUpRight, Menu, ChevronDown } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { BackgroundMesh } from "./BackgroundMesh";
@@ -7,11 +7,24 @@ import { Brand } from "./Brand";
 import { PageQuote } from "./PageQuote";
 import { ShortlistControl } from "./Shortlist";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetClose } from "./ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetDescription,
+  SheetClose,
+} from "./ui/sheet";
+
+const PROPERTY_LINKS = [
+  { to: "/sale", label: "Buy / Sale" },
+  { to: "/rent", label: "Rent / Lease" },
+] as const;
 
 const nav = [
   { to: "/", label: "Home" },
-  { to: "/properties", label: "Properties" },
+  { to: "/sale", label: "Sale", parent: "Properties" },
+  { to: "/rent", label: "Rent", parent: "Properties" },
   { to: "/about", label: "About Us" },
   { to: "/services", label: "Services" },
   { to: "/contact", label: "Contact Us" },
@@ -20,6 +33,7 @@ const nav = [
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [propsOpen, setPropsOpen] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 20);
     on();
@@ -28,49 +42,211 @@ function Navbar() {
   }, []);
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-3 md:px-6 pt-3 md:pt-4">
-      <div
-        className={`mx-auto max-w-6xl rounded-full border overflow-hidden ${
-          scrolled
-            ? "backdrop-blur-2xl bg-card/90 border-gold/30 shadow-[0_18px_50px_-20px_color-mix(in_oklab,var(--foreground)_30%,transparent)]"
-            : "bg-card/70 backdrop-blur-md border-gold/15 shadow-[0_10px_36px_-22px_color-mix(in_oklab,var(--foreground)_24%,transparent)]"
-        }`}
-      >
+      <div className="relative mx-auto max-w-6xl">
+        {/* Backdrop is its own layer so the bar no longer needs overflow-hidden
+            (which used to clip the Properties dropdown into an overlapping sliver). */}
         <div
-          className={`px-4 md:px-6 flex items-center justify-between ${
+          aria-hidden
+          className={`absolute inset-0 rounded-full border pointer-events-none ${
+            scrolled
+              ? "backdrop-blur-2xl bg-card/90 border-gold/30 shadow-[0_18px_50px_-20px_color-mix(in_oklab,var(--foreground)_30%,transparent)]"
+              : "bg-card/70 backdrop-blur-md border-gold/15 shadow-[0_10px_36px_-22px_color-mix(in_oklab,var(--foreground)_24%,transparent)]"
+          }`}
+        />
+        <div
+          className={`relative px-4 md:px-6 flex items-center justify-between gap-3 ${
             scrolled ? "h-14" : "h-[4.25rem]"
           }`}
         >
-        <Link to="/" className="flex items-center gap-3 group">
-          <Brand />
-        </Link>
-        <nav className="hidden lg:flex items-center gap-1">
-          {nav.map((n) => (
+          <Link to="/" className="flex items-center gap-3 group shrink-0">
+            <Brand />
+          </Link>
+          <nav className="hidden lg:flex items-center gap-1 whitespace-nowrap">
             <Link
-              key={n.to}
-              to={n.to}
+              to="/"
               className="relative px-4 py-2 text-xs tracking-[0.22em] uppercase text-slate-muted hover:text-foreground transition-colors"
               activeProps={{ className: "text-gold" }}
-              activeOptions={{ exact: n.to === "/" }}
+              activeOptions={{ exact: true }}
             >
-              {n.label}
+              Home
             </Link>
-          ))}
-        </nav>
-        <a
-          href="tel:+919152383586"
-          className="hidden xl:inline-flex items-center gap-2 text-xs tracking-[0.22em] text-gold gold-border px-4 py-2 hover:bg-gold/10 transition-colors"
-        >
-          <Phone className="h-3 w-3" /> +91 91523 83586
-        </a>
-        <div className="flex items-center gap-2"><ShortlistControl />
-          <Sheet open={open} onOpenChange={setOpen}><SheetTrigger asChild><Button variant="outline" size="icon" className="lg:hidden h-11 w-11 rounded-full" aria-label="Open navigation menu"><Menu /></Button></SheetTrigger>
-            <SheetContent className="w-[min(90vw,380px)] bg-card/95 backdrop-blur-xl flex flex-col overflow-y-auto" side="right">
-              <SheetTitle className="pt-6"><Brand /></SheetTitle><SheetDescription className="sr-only">Navigate Mahadev Property pages</SheetDescription>
-              <div className="mt-12 flex flex-col gap-2">{nav.map((n,i) => <SheetClose asChild key={n.to}><Link to={n.to} className="flex items-center justify-between py-4 border-b border-border text-xl" activeProps={{className: "text-gold"}} activeOptions={{exact: true}}><span><span className="text-xs text-muted-foreground mr-4">0{i+1}</span>{n.label}</span><ArrowUpRight className="w-4 h-4" /></Link></SheetClose>)}</div>
-              <div className="mt-auto pt-10 space-y-3"><Button asChild className="w-full h-12"><a href="tel:+919152383586"><Phone />Call us</a></Button><Button asChild variant="outline" className="w-full h-12"><a href="https://wa.me/919152383586" target="_blank" rel="noopener noreferrer"><MessageCircle />WhatsApp</a></Button></div>
-            </SheetContent>
-          </Sheet>
-        </div>
+            <div className="group relative">
+              <button
+                type="button"
+                aria-haspopup="true"
+                className="flex items-center gap-1 px-4 py-2 text-xs tracking-[0.22em] uppercase text-slate-muted group-hover:text-foreground transition-colors"
+              >
+                Properties{" "}
+                <ChevronDown className="h-3 w-3 transition-transform group-hover:rotate-180" />
+              </button>
+              <div className="invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all absolute left-0 top-full pt-2 z-20">
+                <div className="min-w-52 rounded-2xl border border-gold/20 bg-card/95 backdrop-blur-xl p-2 shadow-xl">
+                  {PROPERTY_LINKS.map((p) => (
+                    <Link
+                      key={p.to}
+                      to={p.to}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-xs tracking-[0.22em] uppercase text-slate-muted hover:text-gold hover:bg-gold/10 transition-colors"
+                      activeProps={{ className: "text-gold bg-gold/10" }}
+                    >
+                      {p.label} <ArrowUpRight className="h-3 w-3" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <Link
+              to="/about"
+              className="relative px-4 py-2 text-xs tracking-[0.22em] uppercase text-slate-muted hover:text-foreground transition-colors"
+              activeProps={{ className: "text-gold" }}
+            >
+              About Us
+            </Link>
+            <Link
+              to="/services"
+              className="relative px-4 py-2 text-xs tracking-[0.22em] uppercase text-slate-muted hover:text-foreground transition-colors"
+              activeProps={{ className: "text-gold" }}
+            >
+              Services
+            </Link>
+            <Link
+              to="/contact"
+              className="relative px-4 py-2 text-xs tracking-[0.22em] uppercase text-slate-muted hover:text-foreground transition-colors"
+              activeProps={{ className: "text-gold" }}
+            >
+              Contact Us
+            </Link>
+          </nav>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Direct dialer: tapping opens the phone app with the number pre-filled. */}
+            <a
+              href="tel:+919152383586"
+              title="Call us"
+              aria-label="Call Mahadev Property"
+              className="hidden sm:inline-flex lg:hidden xl:inline-flex items-center gap-2 shrink-0 gold-border rounded-full px-4 py-2 text-xs font-medium tracking-[0.22em] uppercase text-gold bg-gold/10 hover:bg-gold hover:text-primary-foreground transition-colors"
+            >
+              <Phone className="h-3.5 w-3.5" /> Call
+            </a>
+            <ShortlistControl />
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="lg:hidden h-11 w-11 rounded-full"
+                  aria-label="Open navigation menu"
+                >
+                  <Menu />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                className="w-[min(90vw,380px)] bg-card/95 backdrop-blur-xl flex flex-col overflow-y-auto"
+                side="right"
+              >
+                <SheetTitle className="pt-6">
+                  <Brand />
+                </SheetTitle>
+                <SheetDescription className="sr-only">
+                  Navigate Mahadev Property pages
+                </SheetDescription>
+                <div className="mt-12 flex flex-col gap-2">
+                  <SheetClose asChild>
+                    <Link
+                      to="/"
+                      className="flex items-center justify-between py-4 border-b border-border text-xl"
+                      activeProps={{ className: "text-gold" }}
+                      activeOptions={{ exact: true }}
+                    >
+                      <span>
+                        <span className="text-xs text-muted-foreground mr-4">01</span>Home
+                      </span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </SheetClose>
+                  <div className="border-b border-border">
+                    <button
+                      type="button"
+                      onClick={() => setPropsOpen((v) => !v)}
+                      aria-expanded={propsOpen}
+                      className="flex w-full items-center justify-between py-4 text-xl"
+                    >
+                      <span>
+                        <span className="text-xs text-muted-foreground mr-4">02</span>Properties
+                      </span>
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform ${propsOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {propsOpen && (
+                      <div className="pb-4 pl-9 flex flex-col gap-1">
+                        {PROPERTY_LINKS.map((p) => (
+                          <SheetClose asChild key={p.to}>
+                            <Link
+                              to={p.to}
+                              className="flex items-center justify-between py-3 text-lg text-slate-muted"
+                              activeProps={{ className: "text-gold" }}
+                            >
+                              <span>{p.label}</span>
+                              <ArrowUpRight className="w-4 h-4" />
+                            </Link>
+                          </SheetClose>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <SheetClose asChild>
+                    <Link
+                      to="/about"
+                      className="flex items-center justify-between py-4 border-b border-border text-xl"
+                      activeProps={{ className: "text-gold" }}
+                    >
+                      <span>
+                        <span className="text-xs text-muted-foreground mr-4">03</span>About Us
+                      </span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      to="/services"
+                      className="flex items-center justify-between py-4 border-b border-border text-xl"
+                      activeProps={{ className: "text-gold" }}
+                    >
+                      <span>
+                        <span className="text-xs text-muted-foreground mr-4">04</span>Services
+                      </span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      to="/contact"
+                      className="flex items-center justify-between py-4 border-b border-border text-xl"
+                      activeProps={{ className: "text-gold" }}
+                    >
+                      <span>
+                        <span className="text-xs text-muted-foreground mr-4">05</span>Contact Us
+                      </span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </SheetClose>
+                </div>
+                <div className="mt-auto pt-10 space-y-3">
+                  <Button asChild className="w-full h-12">
+                    <a href="tel:+919152383586">
+                      <Phone />
+                      Call us
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full h-12">
+                    <a href="https://wa.me/919152383586" target="_blank" rel="noopener noreferrer">
+                      <MessageCircle />
+                      WhatsApp
+                    </a>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>
@@ -80,21 +256,28 @@ function Navbar() {
 function Footer() {
   return (
     <footer className="relative z-10 mt-10 mx-3 md:mx-6 mb-4 rounded-[2.5rem] border border-gold/20 bg-card/85 backdrop-blur-xl overflow-hidden shadow-[0_-14px_50px_-24px_color-mix(in_oklab,var(--foreground)_28%,transparent)]">
-      <div className="h-1 w-full bg-gradient-to-r from-transparent via-gold to-transparent" aria-hidden="true" />
+      <div
+        className="h-1 w-full bg-gradient-to-r from-transparent via-gold to-transparent"
+        aria-hidden="true"
+      />
       <div className="mx-auto max-w-7xl px-6 py-16 grid gap-12 md:grid-cols-4">
         <div>
           <Brand large />
           <p className="mt-6 text-sm text-slate-muted leading-relaxed">
-            A trusted real estate & development studio building transparent, long-term value across Mumbai.
+            A trusted real estate & development studio building transparent, long-term value across
+            Mumbai.
           </p>
         </div>
         <div>
           <div className="text-[10px] tracking-[0.4em] text-gold mb-5">NAVIGATE</div>
           <ul className="space-y-3 text-sm">
             {nav.map((n) => (
-              <li key={n.to}>
-                <Link to={n.to} className="text-slate-muted hover:text-foreground transition-colors">
-                  {n.label}
+              <li key={`${n.to}-${n.label}`}>
+                <Link
+                  to={n.to}
+                  className="text-slate-muted hover:text-foreground transition-colors"
+                >
+                  {"parent" in n ? `${n.parent} — ${n.label}` : n.label}
                 </Link>
               </li>
             ))}
@@ -103,9 +286,16 @@ function Footer() {
         <div>
           <div className="text-[10px] tracking-[0.4em] text-gold mb-5">STUDIO</div>
           <ul className="space-y-3 text-sm text-slate-muted">
-            <li className="flex gap-3"><MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /> P1, Deep Sadan Bldg, Sundar Nagar, Malad West, Mumbai 400064</li>
-            <li className="flex gap-3"><Phone className="h-4 w-4 text-gold shrink-0 mt-0.5" /> +91 91523 83586</li>
-            <li className="flex gap-3"><Mail className="h-4 w-4 text-gold shrink-0 mt-0.5" /> mahadevproperties@gmail.com</li>
+            <li className="flex gap-3">
+              <MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /> P1, Deep Sadan Bldg, Sundar
+              Nagar, Malad West, Mumbai 400064
+            </li>
+            <li className="flex gap-3">
+              <Phone className="h-4 w-4 text-gold shrink-0 mt-0.5" /> +91 91523 83586
+            </li>
+            <li className="flex gap-3">
+              <Mail className="h-4 w-4 text-gold shrink-0 mt-0.5" /> mahadevproperties@gmail.com
+            </li>
           </ul>
         </div>
         <div>
@@ -121,7 +311,17 @@ function Footer() {
       <div className="border-t border-gold/10">
         <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col md:flex-row justify-between gap-3 text-xs tracking-[0.22em] text-slate-muted">
           <span>© {new Date().getFullYear()} MAHADEV PROPERTY · ALL RIGHTS RESERVED</span>
-          <span>DESIGNED WITH PRECISION · MUMBAI</span>
+          <span>
+            DESIGNED & DEVELOPED BY{" "}
+            <a
+              href="https://neverendingservices.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-foreground transition-colors"
+            >
+              NEVER ENDING SERVICES
+            </a>
+          </span>
         </div>
       </div>
     </footer>
@@ -162,6 +362,10 @@ export function Layout({ children }: { children: ReactNode }) {
   );
 }
 
-export const Section = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <section className={`mx-auto max-w-7xl px-6 ${className}`}>{children}</section>
-);
+export const Section = ({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) => <section className={`mx-auto max-w-7xl px-6 ${className}`}>{children}</section>;

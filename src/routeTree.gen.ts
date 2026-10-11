@@ -12,7 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as PropertiesRouteImport } from './routes/properties'
+import { Route as RentRouteImport } from './routes/rent'
+import { Route as SaleRouteImport } from './routes/sale'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PropertyIdRouteImport } from './routes/property.$id'
 
@@ -31,9 +32,14 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PropertiesRoute = PropertiesRouteImport.update({
-  id: '/properties',
-  path: '/properties',
+const RentRoute = RentRouteImport.update({
+  id: '/rent',
+  path: '/rent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SaleRoute = SaleRouteImport.update({
+  id: '/sale',
+  path: '/sale',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -51,7 +57,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/properties': typeof PropertiesRoute
+  '/rent': typeof RentRoute
+  '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -59,7 +66,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/properties': typeof PropertiesRoute
+  '/rent': typeof RentRoute
+  '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -68,23 +76,37 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/properties': typeof PropertiesRoute
+  '/rent': typeof RentRoute
+  '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/about' | '/contact' | '/properties' | '/services' | '/property/$id'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/rent'
+    | '/sale'
+    | '/services'
+    | '/property/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/about' | '/contact' | '/properties' | '/services' | '/property/$id'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/rent'
+    | '/sale'
+    | '/services'
+    | '/property/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
-    | '/properties'
+    | '/rent'
+    | '/sale'
     | '/services'
     | '/property/$id'
   fileRoutesById: FileRoutesById
@@ -93,7 +115,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
-  PropertiesRoute: typeof PropertiesRoute
+  RentRoute: typeof RentRoute
+  SaleRoute: typeof SaleRoute
   ServicesRoute: typeof ServicesRoute
   PropertyIdRoute: typeof PropertyIdRoute
 }
@@ -121,11 +144,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/properties': {
-      id: '/properties'
-      path: '/properties'
-      fullPath: '/properties'
-      preLoaderRoute: typeof PropertiesRouteImport
+    '/rent': {
+      id: '/rent'
+      path: '/rent'
+      fullPath: '/rent'
+      preLoaderRoute: typeof RentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sale': {
+      id: '/sale'
+      path: '/sale'
+      fullPath: '/sale'
+      preLoaderRoute: typeof SaleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -149,7 +179,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
-  PropertiesRoute: PropertiesRoute,
+  RentRoute: RentRoute,
+  SaleRoute: SaleRoute,
   ServicesRoute: ServicesRoute,
   PropertyIdRoute: PropertyIdRoute,
 }

@@ -27,10 +27,11 @@ function HomePage() {
       <Hero />
       <Ticker />
       <SearchDashboard />
-      <PropertyCarousel />
+      <ArchitecturalShowcase />
       <Metrics />
       <Ticker reverse />
-      <ArchitecturalShowcase />
+      <PropertyCarousel listing="sale" />
+      <PropertyCarousel listing="rent" />
       <ReviewsBoard />
     </Layout>
   );
@@ -59,7 +60,7 @@ function Hero() {
             </p>
           </RevealItem>
           <RevealItem className="mt-10 flex flex-wrap gap-4">
-            <Link to="/properties"><MagneticButton variant="solid">View Portfolio <ArrowUpRight className="h-4 w-4" /></MagneticButton></Link>
+            <Link to="/sale"><MagneticButton variant="solid">View Portfolio <ArrowUpRight className="h-4 w-4" /></MagneticButton></Link>
             <Link to="/contact"><MagneticButton>Request Briefing</MagneticButton></Link>
           </RevealItem>
           <RevealItem className="mt-14 grid grid-cols-3 max-w-md gap-6 border-t border-gold/10 pt-8">
@@ -135,7 +136,7 @@ function SearchDashboard() {
             <Field label="STATUS" value={status} onChange={setStatus} options={["Ready to Move", "Under Construction", "Newly Launched", "Resale"]} />
           </div>
           <div className="mt-6 flex justify-end">
-            <Link to="/properties">
+            <Link to="/sale">
               <MagneticButton variant="solid"><Search className="h-4 w-4" /> Search Portfolio</MagneticButton>
             </Link>
           </div>

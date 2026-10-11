@@ -35,55 +35,98 @@
   --color-photo-foreground: var(--photo-foreground);
 }
 :root {
-  --radius: .5rem;
+  --radius: 0.5rem;
   /* Luxury champagne-ivory canvas */
-  --background: oklch(.965 .014 88);
-  --foreground: oklch(.21 .024 55);
-  --obsidian: oklch(.915 .024 82);
-  --card: oklch(.985 .008 90);
+  --background: oklch(0.965 0.014 88);
+  --foreground: oklch(0.21 0.024 55);
+  --obsidian: oklch(0.915 0.024 82);
+  --card: oklch(0.985 0.008 90);
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
   /* Rich brushed champagne gold */
-  --primary: oklch(.56 .115 72);
-  --primary-foreground: oklch(.99 .005 90);
-  --secondary: oklch(.935 .02 85);
+  --primary: oklch(0.56 0.115 72);
+  --primary-foreground: oklch(0.99 0.005 90);
+  --secondary: oklch(0.935 0.02 85);
   --secondary-foreground: var(--foreground);
   --muted: var(--secondary);
-  --muted-foreground: oklch(.48 .028 60);
+  --muted-foreground: oklch(0.48 0.028 60);
   --slate-muted: var(--muted-foreground);
-  --accent: oklch(.92 .028 82);
+  --accent: oklch(0.92 0.028 82);
   --accent-foreground: var(--foreground);
-  --destructive: oklch(.577 .245 27.325);
+  --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: var(--primary-foreground);
-  --border: oklch(.87 .025 80);
+  --border: oklch(0.87 0.025 80);
   --input: var(--border);
   --ring: var(--primary);
   --gold: var(--primary);
-  --gold-muted: oklch(.44 .09 65);
-  --photo-foreground: oklch(.99 .005 90);
-  --brand-background: oklch(.965 .014 88);
-  --shadow-elegant: 0 14px 44px -14px color-mix(in oklab,var(--foreground) 18%,transparent);
-  --gradient-gold: linear-gradient(135deg, oklch(.72 .13 82),var(--gold),var(--gold-muted));
+  --gold-muted: oklch(0.44 0.09 65);
+  --photo-foreground: oklch(0.99 0.005 90);
+  --brand-background: oklch(0.965 0.014 88);
+  --shadow-elegant: 0 14px 44px -14px color-mix(in oklab, var(--foreground) 18%, transparent);
+  --gradient-gold: linear-gradient(135deg, oklch(0.72 0.13 82), var(--gold), var(--gold-muted));
 }
 @layer base {
-  * { border-color: var(--border); letter-spacing: 0 !important; }
-  html, body { background-color: var(--background); color: var(--foreground); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
-  body { overflow-x: clip; }
-  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
-  h1,h2,h3 { text-wrap: balance; }
-  a, p, blockquote, dd { overflow-wrap: anywhere; }
-  :focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
+  * {
+    border-color: var(--border);
+    letter-spacing: 0 !important;
+  }
+  html,
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    overflow-x: clip;
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  a,
+  p,
+  blockquote,
+  dd {
+    overflow-wrap: anywhere;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+  }
 }
-@utility gold-border { border: 1px solid var(--gold); }
-@utility glow-gold { box-shadow: var(--shadow-elegant); }
-@utility text-gradient-gold { background: var(--gradient-gold); background-clip: text; -webkit-background-clip: text; color: transparent; }
-@utility card-elevated { background: var(--card); box-shadow: var(--shadow-elegant); }
+@utility gold-border {
+  border: 1px solid var(--gold);
+}
+@utility glow-gold {
+  box-shadow: var(--shadow-elegant);
+}
+@utility text-gradient-gold {
+  background: var(--gradient-gold);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+@utility card-elevated {
+  background: var(--card);
+  box-shadow: var(--shadow-elegant);
+}
 
 /* --- Depth-stack system: lift + parallax + light sweep (koi mouse tilt nahi) --- */
 .depth-card {
   transform: translate3d(0, 0, 0);
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 .depth-card .depth-media {
@@ -98,9 +141,16 @@
   z-index: 2;
   pointer-events: none;
   opacity: 0;
-  background: linear-gradient(115deg, transparent 30%, color-mix(in oklab, var(--gold) 18%, transparent) 50%, transparent 70%);
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    color-mix(in oklab, var(--gold) 18%, transparent) 50%,
+    transparent 70%
+  );
   transform: translateX(-60%);
-  transition: opacity 0.6s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 0.6s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (hover: hover) and (pointer: fine) {
   .depth-card:hover {
@@ -118,43 +168,175 @@
     transform: translate3d(0, calc(-0.45 * var(--depth-lift, 14px)), 0);
   }
 }
-.depth-float { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.depth-float {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
 @media (prefers-reduced-motion: reduce) {
-  .depth-card, .depth-card .depth-media, .depth-float { transition: none; }
-  .depth-card::after { display: none; }
+  .depth-card,
+  .depth-card .depth-media,
+  .depth-float {
+    transition: none;
+  }
+  .depth-card::after {
+    display: none;
+  }
 }
-@utility ticker-track { animation: ticker-scroll 45s linear infinite; }
-@utility pulse-gold { animation: gold-pulse 3s ease-out infinite; }
-@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes gold-pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab,var(--gold) 25%,transparent); } 50% { box-shadow: 0 0 0 10px transparent; } }
-.brand-mark { border: 1px solid var(--border); padding: 3px 5px; }
-.architectural-background { background-color: var(--background); background-image: linear-gradient(color-mix(in oklab,var(--gold) 4%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in oklab,var(--gold) 4%,transparent) 1px,transparent 1px); background-size: 80px 80px; }
-.architectural-background::after { content:""; position:absolute; inset:0; opacity:.025; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath d='M0 0h180v180H0z' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E"); }
-.home-hero { min-height: 590px; position:relative; display:flex; align-items:center; background: oklch(.95 .02 88); color: var(--foreground); overflow:hidden; }
-.home-hero > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.home-hero::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,oklch(.97 .014 88 / 94%),oklch(.97 .014 88 / 25%)); }
-.home-hero-content { position:relative; z-index:2; width:100%; }
-.carousel-stage { height:480px; perspective:1400px; touch-action:pan-y; }
-.carousel-card { left:calc(50% - 260px); width:520px; transform-style:preserve-3d; border-radius:4px; box-shadow:var(--shadow-elegant); }
-.carousel-card:not(:first-child) { opacity:0; }
-.carousel-photo { height:300px; }
-.landmark-panel { width:70%; }
-.blueprint-photo { perspective:1000px; }
-.blueprint-layer { position:absolute; inset:0; background-color:color-mix(in oklab,var(--foreground) 35%,transparent); background-image:linear-gradient(color-mix(in oklab,var(--photo-foreground) 35%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in oklab,var(--photo-foreground) 35%,transparent) 1px,transparent 1px); background-size:40px 40px; opacity:.4; transition:opacity .7s; pointer-events:none; }
-.blueprint-photo:hover .blueprint-layer { opacity:0; }
-@media(max-width:767px) {
-  .home-hero { min-height:610px; }
-  .home-hero::after { background:linear-gradient(90deg,oklch(.97 .014 88 / 96%),oklch(.97 .014 88 / 48%)); }
-  .carousel-stage { height:405px; }
-  .carousel-card { left:calc(50% - 42vw); width:84vw; }
-  .carousel-photo { height:220px; }
-  main .p-10 { padding:1.5rem; }
-  main h1.text-5xl { font-size:2.5rem; }
-  .landmark-track { flex-direction:column; }
-  .landmark-panel { width:100%; }
+@utility ticker-track {
+  animation: ticker-scroll 22s linear infinite;
 }
-@media(min-width:768px) and (max-width:1023px) { .landmark-track { overflow-x:auto; scroll-snap-type:x mandatory; } .landmark-panel { scroll-snap-align:start; width:85%; } }
-@media(prefers-reduced-motion:reduce) {
-  *,*::before,*::after { animation:none !important; transition-duration:0s !important; scroll-behavior:auto !important; }
-  .blueprint-layer { opacity:0; }
+@utility pulse-gold {
+  animation: gold-pulse 1.8s ease-out infinite;
+}
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes gold-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--gold) 25%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+.architectural-background {
+  background-color: var(--background);
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--gold) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--gold) 4%, transparent) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.architectural-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath d='M0 0h180v180H0z' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+.home-hero {
+  min-height: 590px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: oklch(0.95 0.02 88);
+  color: var(--foreground);
+  overflow: hidden;
+}
+.home-hero > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, oklch(0.97 0.014 88 / 94%), oklch(0.97 0.014 88 / 25%));
+}
+.home-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+.carousel-stage {
+  height: 480px;
+  perspective: 1400px;
+  touch-action: pan-y;
+}
+.carousel-card {
+  left: calc(50% - 260px);
+  width: 520px;
+  transform-style: preserve-3d;
+  border-radius: 4px;
+  box-shadow: var(--shadow-elegant);
+}
+.carousel-photo {
+  height: 300px;
+}
+.landmark-panel {
+  width: 70%;
+}
+.blueprint-photo {
+  perspective: 1000px;
+}
+.blueprint-layer {
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(in oklab, var(--foreground) 35%, transparent);
+  background-image:
+    linear-gradient(
+      color-mix(in oklab, var(--photo-foreground) 35%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--photo-foreground) 35%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  opacity: 0.4;
+  transition: opacity 0.7s;
+  pointer-events: none;
+}
+.blueprint-photo:hover .blueprint-layer {
+  opacity: 0;
+}
+@media (max-width: 767px) {
+  .home-hero {
+    min-height: 610px;
+  }
+  .home-hero::after {
+    background: linear-gradient(90deg, oklch(0.97 0.014 88 / 96%), oklch(0.97 0.014 88 / 48%));
+  }
+  .carousel-stage {
+    height: 405px;
+  }
+  .carousel-card {
+    left: calc(50% - 42vw);
+    width: 84vw;
+  }
+  .carousel-photo {
+    height: 220px;
+  }
+  main .p-10 {
+    padding: 1.5rem;
+  }
+  main h1.text-5xl {
+    font-size: 2.5rem;
+  }
+  .landmark-track {
+    flex-direction: column;
+  }
+  .landmark-panel {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .landmark-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .landmark-panel {
+    scroll-snap-align: start;
+    width: 85%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  .blueprint-layer {
+    opacity: 0;
+  }
 }
