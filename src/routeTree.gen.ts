@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GdprComplianceRouteImport } from './routes/gdpr-compliance'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as RentRouteImport } from './routes/rent'
 import { Route as SaleRouteImport } from './routes/sale'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as PropertyIdRouteImport } from './routes/property.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -32,6 +35,16 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GdprComplianceRoute = GdprComplianceRouteImport.update({
+  id: '/gdpr-compliance',
+  path: '/gdpr-compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RentRoute = RentRouteImport.update({
   id: '/rent',
   path: '/rent',
@@ -47,6 +60,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PropertyIdRoute = PropertyIdRouteImport.update({
   id: '/property/$id',
   path: '/property/$id',
@@ -57,18 +75,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/gdpr-compliance': typeof GdprComplianceRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/rent': typeof RentRoute
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/gdpr-compliance': typeof GdprComplianceRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/rent': typeof RentRoute
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRoutesById {
@@ -76,9 +100,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/gdpr-compliance': typeof GdprComplianceRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/rent': typeof RentRoute
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRouteTypes {
@@ -87,27 +114,36 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/gdpr-compliance'
+    | '/privacy-policy'
     | '/rent'
     | '/sale'
     | '/services'
+    | '/terms-of-service'
     | '/property/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/contact'
+    | '/gdpr-compliance'
+    | '/privacy-policy'
     | '/rent'
     | '/sale'
     | '/services'
+    | '/terms-of-service'
     | '/property/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
+    | '/gdpr-compliance'
+    | '/privacy-policy'
     | '/rent'
     | '/sale'
     | '/services'
+    | '/terms-of-service'
     | '/property/$id'
   fileRoutesById: FileRoutesById
 }
@@ -115,9 +151,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  GdprComplianceRoute: typeof GdprComplianceRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RentRoute: typeof RentRoute
   SaleRoute: typeof SaleRoute
   ServicesRoute: typeof ServicesRoute
+  TermsOfServiceRoute: typeof TermsOfServiceRoute
   PropertyIdRoute: typeof PropertyIdRoute
 }
 
@@ -144,6 +183,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gdpr-compliance': {
+      id: '/gdpr-compliance'
+      path: '/gdpr-compliance'
+      fullPath: '/gdpr-compliance'
+      preLoaderRoute: typeof GdprComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rent': {
       id: '/rent'
       path: '/rent'
@@ -165,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms-of-service': {
+      id: '/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/property/$id': {
       id: '/property/$id'
       path: '/property/$id'
@@ -179,9 +239,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  GdprComplianceRoute: GdprComplianceRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   RentRoute: RentRoute,
   SaleRoute: SaleRoute,
   ServicesRoute: ServicesRoute,
+  TermsOfServiceRoute: TermsOfServiceRoute,
   PropertyIdRoute: PropertyIdRoute,
 }
 export const routeTree = rootRouteImport

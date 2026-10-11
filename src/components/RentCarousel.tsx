@@ -18,7 +18,7 @@ import { Button } from "./ui/button";
 import { SaveProperty } from "./Shortlist";
 
 const rentals = properties.filter((p) => p.listing === "rent");
-const AUTOPLAY_MS = 5200;
+const AUTOPLAY_MS = 3400; // brisk, keeps the rail visibly moving
 
 /**
  * RENT carousel — a dark-bronze "split rail" with a completely different
@@ -47,7 +47,6 @@ export function RentCarousel() {
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const wipe = [0.65, 0, 0.35, 1] as const;
-
   return (
     <section
       aria-roledescription="carousel"
@@ -113,13 +112,13 @@ export function RentCarousel() {
                     ? { opacity: 0 }
                     : {
                         clipPath: "inset(0% 100% 0% 0%)",
-                        transition: { duration: 0.9, ease: wipe },
+                        transition: { duration: 0.55, ease: wipe },
                       }
                 }
                 transition={{
-                  clipPath: { duration: reduced ? 0 : 0.9, ease: wipe },
-                  scale: { duration: reduced ? 0 : 7.5, ease: "linear" },
-                  opacity: { duration: 0.3 },
+                  clipPath: { duration: reduced ? 0 : 0.55, ease: wipe },
+                  scale: { duration: reduced ? 0 : 5.2, ease: "linear" },
+                  opacity: { duration: 0.25 },
                 }}
               />
             </AnimatePresence>
@@ -143,7 +142,7 @@ export function RentCarousel() {
                 initial={{ opacity: 0, y: reduced ? 0 : 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: reduced ? 0 : -16 }}
-                transition={{ duration: reduced ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: reduced ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="flex flex-wrap items-center gap-3 text-[10px] tracking-[0.32em] text-gold">
                   <span className="border border-gold/40 px-3 py-1">
@@ -189,7 +188,9 @@ export function RentCarousel() {
                     className="border-gold/40 text-photo-foreground hover:border-gold hover:text-gold"
                   >
                     <a
-                      href={`https://wa.me/919152383586?text=${encodeURIComponent(`Hi, please share details for ${active.name}.`)}`}
+                      href={`https://wa.me/919152383586?text=${encodeURIComponent(
+                        `Hi Mahadev Property, I'm interested in ${active.name} (${active.type}) — ${active.price}/month, ${active.location}. Please share availability and details.`,
+                      )}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-  MapPin,
-  MessageCircle,
-  Pause,
-  Play,
-} from "lucide-react";
+import { ArrowUpRight, MapPin, MessageCircle } from "lucide-react";
 import { properties } from "../lib/properties";
-import { Button } from "./ui/button";
 import { SaveProperty } from "./Shortlist";
 import { gsapReady, motionOk } from "../lib/motion";
 
@@ -20,27 +11,26 @@ const saleFeatured = [
   properties[8],
   properties[4],
   properties[10],
+  properties[1],
 ].filter((p) => p !== undefined);
 
+const PX_PER_SECOND = 120; // brisk, continuous filmstrip pace
+
 /**
- * SALE carousel — a light "magazine shelf": a horizontal filmstrip of tall
- * portrait cards. GSAP slides the strip so the active card always sits dead
- * centre, lifted, full-colour and sharp, while its neighbours sit back,
- * flattened and desaturated. The RENT carousel uses a completely different
- * design and animation (see RentCarousel.tsx).
+ * SALE carousel — an infinite "film strip" marquee matching the reference:
+ * rounded landscape photo cards flowing continuously left at a brisk,
+ * constant pace (GSAP linear loop, duplicated track = seamless). RENT uses
+ * a completely different design (RentCarousel.tsx). Stays a live carousel
+ * on mobile & tablet — the marquee never stops there either.
  */
 export function PropertyCarousel() {
   const items = saleFeatured;
-  const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
-  const [step, setStep] = useState(364);
   const stage = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
-  const touch = useRef(0);
+  const tween = useRef<{ pause: () => void; play: () => void } | null>(null);
   const resume = useRef(0);
-  const advance = (direction: number) =>
-    setIndex((i) => (i + direction + items.length) % items.length);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -50,87 +40,49 @@ export function PropertyCarousel() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  // Measure card + gap so the strip can be positioned without GSAP
-  // (used as the reduced-motion fallback and by the shelf animation).
+  // Seamless marquee: the track renders every card twice; animating x from
+  // 0 to -50% of the track and repeating gives a perfect loop.
   useEffect(() => {
-    const measure = () => {
-      const card = track.current?.querySelector<HTMLElement>("[data-shelf-card]");
-      if (!card) return;
-      const gap = parseFloat(getComputedStyle(track.current!).columnGap || "0") || 0;
-      setStep(card.offsetWidth + gap);
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
-
-  const hold = () => {
-    window.clearTimeout(resume.current);
-    stage.current?.setAttribute("data-hold", "true");
-  };
-  const release = () => {
-    window.clearTimeout(resume.current);
-    resume.current = window.setTimeout(
-      () => stage.current?.removeAttribute("data-hold"),
-      1200,
-    );
-  };
-  useEffect(() => () => window.clearTimeout(resume.current), []);
-
-  useEffect(() => {
-    if (paused || reduced) return;
-    const timer = window.setInterval(() => {
-      if (stage.current?.hasAttribute("data-hold")) return;
-      advance(1);
-    }, 3200);
-    return () => window.clearInterval(timer);
-  }, [paused, reduced]);
-
-  // Shelf animation — slide the strip to centre the active card and
-  // restyle each card relative to it.
-  useEffect(() => {
-    if (!motionOk()) return;
+    if (reduced || !motionOk()) return;
     let ctx: { revert: () => void } | undefined;
     let cancelled = false;
     void gsapReady().then(({ gsap }) => {
-      if (cancelled || !track.current || !stage.current) return;
+      if (cancelled || !track.current) return;
       const trackEl = track.current;
       ctx = gsap.context(() => {
-        const cards = Array.from(trackEl.querySelectorAll<HTMLElement>("[data-shelf-card]"));
-        const positionTrack = () => {
-          const gap = parseFloat(getComputedStyle(trackEl).columnGap || "0") || 0;
-          const cardWidth = cards[0]?.offsetWidth ?? 340;
-          return -(index * (cardWidth + gap));
-        };
-        gsap.to(trackEl, {
-          x: positionTrack,
-          duration: reduced ? 0 : 0.9,
-          ease: "expo.out",
-          overwrite: true,
-        });
-        cards.forEach((card, i) => {
-          const isCenter = i === index;
-          const distance = Math.abs(i - index);
-          gsap.to(card, {
-            y: isCenter ? -16 : 0,
-            scale: isCenter ? 1 : 0.94,
-            opacity: distance > 2 ? 0.35 : 1,
-            filter: isCenter ? "grayscale(0)" : "grayscale(0.7)",
-            duration: reduced ? 0 : 0.75,
-            ease: "expo.out",
-            overwrite: true,
-          });
-        });
-        const onResize = () => gsap.to(trackEl, { x: positionTrack(), duration: 0 });
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
+        const distance = trackEl.scrollWidth / 2;
+        if (distance > 0) {
+          tween.current = gsap.to(trackEl, {
+            x: -distance,
+            duration: distance / PX_PER_SECOND,
+            ease: "none",
+            repeat: -1,
+          }) as unknown as { pause: () => void; play: () => void };
+        }
       }, stage);
     });
     return () => {
       cancelled = true;
       ctx?.revert();
+      tween.current = null;
     };
-  }, [index, reduced]);
+  }, [reduced]);
+
+  useEffect(() => {
+    if (paused) tween.current?.pause();
+    else tween.current?.play();
+  }, [paused]);
+
+  // Touch: brief hold so a swipe/tap doesn't fight the strip.
+  const hold = () => {
+    window.clearTimeout(resume.current);
+    setPaused(true);
+  };
+  const release = () => {
+    window.clearTimeout(resume.current);
+    resume.current = window.setTimeout(() => setPaused(false), 2000);
+  };
+  useEffect(() => () => window.clearTimeout(resume.current), []);
 
   return (
     <section
@@ -147,151 +99,109 @@ export function PropertyCarousel() {
             Properties for sale.
           </h2>
           <p className="mt-3 max-w-md text-sm text-slate-muted">
-            A curated shelf of resale and ready-to-move homes across Malad West —
-            browse the strip, pick a card.
+            A moving gallery of resale and ready-to-move homes across Malad West —
+            tap any frame for the full brief.
           </p>
         </div>
-        <Button asChild variant="link">
-          <Link to="/sale">
-            All sale properties <ArrowUpRight />
+        <div className="flex items-center gap-4">
+          {paused && (
+            <span className="text-[10px] tracking-[0.3em] text-slate-muted">PAUSED</span>
+          )}
+          <Link to="/sale" className="inline-flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-gold hover:text-foreground transition-colors">
+            All sale properties <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
-        </Button>
+        </div>
       </div>
 
       <div
         ref={stage}
-        className="sale-shelf relative mt-10"
+        className="sale-marquee relative mt-10"
         onMouseEnter={hold}
         onMouseLeave={release}
         onFocusCapture={hold}
         onBlurCapture={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget)) release();
         }}
-        onTouchStart={(e) => {
-          touch.current = e.touches[0]?.clientX ?? 0;
-          hold();
-        }}
-        onTouchEnd={(e) => {
-          const delta = (e.changedTouches[0]?.clientX ?? touch.current) - touch.current;
-          if (Math.abs(delta) > 45) advance(delta > 0 ? -1 : 1);
-          release();
-        }}
+        onTouchStart={hold}
+        onTouchEnd={release}
       >
         <div
           ref={track}
-          className={`sale-shelf-track ${reduced ? "shelf-slide" : ""}`}
-          style={reduced ? { transform: `translateX(${-index * step}px)` } : undefined}
+          className="sale-marquee-track"
+          style={reduced ? { animation: "none" } : undefined}
         >
-          {items.map((p, i) => (
-            <article
-              key={p.id}
-              data-shelf-card
-              onClick={() => setIndex(i)}
-              className={`sale-card group relative flex flex-col border bg-card overflow-hidden cursor-pointer transition-colors ${
-                i === index ? "border-gold/50" : "border-border"
-              }`}
-              style={{ boxShadow: i === index ? "var(--shadow-elegant)" : undefined }}
-            >
-              <div className="relative flex-1 min-h-0 overflow-hidden">
-                <img
-                  data-motion="skip"
-                  src={p.image}
-                  alt={p.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-obsidian/20" />
-                <Link
-                  to="/property/$id"
-                  params={{ id: p.id }}
-                  aria-label={`View ${p.name} details`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute inset-0 z-10"
-                />
-                <div className="absolute top-4 left-4 bg-card/95 px-3 py-2 text-xs text-foreground z-20">
-                  {p.status}
-                </div>
-                <div className="absolute top-4 right-4 z-20" onClick={(e) => e.stopPropagation()}>
-                  <SaveProperty id={p.id} />
-                </div>
-                <div className="absolute bottom-4 left-4 right-4 z-20 flex items-end justify-between gap-3">
-                  <span className="text-[10px] tracking-[0.28em] text-gold bg-card/95 px-3 py-1.5">
-                    0{i + 1} / 0{items.length}
+          {[...items, ...items].map((p, i) => {
+            const duplicate = i >= items.length;
+            return (
+              <article
+                key={`${p.id}-${duplicate ? "dup" : "orig"}`}
+                aria-hidden={duplicate || undefined}
+                className={`sale-marquee-card group relative overflow-hidden rounded-2xl border border-gold/15 hover:border-gold/50 transition-colors ${
+                  duplicate ? "[&_a]:pointer-events-none" : ""
+                }`}
+              >
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    data-motion="skip"
+                    src={p.image}
+                    alt={duplicate ? "" : p.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-obsidian/90 via-obsidian/15 to-transparent" />
+                  <Link
+                    to="/property/$id"
+                    params={{ id: p.id }}
+                    aria-label={duplicate ? undefined : `View ${p.name} details`}
+                    tabIndex={duplicate ? -1 : undefined}
+                    className="absolute inset-0 z-10"
+                  />
+                  <span className="absolute top-3 left-3 bg-card/95 px-3 py-1.5 text-[10px] tracking-[0.2em] text-foreground z-20">
+                    {p.status}
                   </span>
-                  <span className="bg-gold text-primary-foreground px-3 py-1.5 text-sm font-semibold whitespace-nowrap">
-                    {p.price}
-                  </span>
+                  <div className="absolute top-3 right-3 z-20" onClick={(e) => e.stopPropagation()}>
+                    <SaveProperty id={p.id} />
+                  </div>
+                  <div className="absolute bottom-3 left-4 right-4 z-20 flex items-end justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="flex gap-1 items-center text-[10px] tracking-[0.22em] text-slate-muted truncate">
+                        <MapPin className="w-3 h-3 text-gold shrink-0" />
+                        {p.location.toUpperCase()} · {p.type}
+                      </p>
+                      <h3 className="mt-1.5 text-base font-bold leading-tight line-clamp-2 text-foreground">
+                        {p.name}
+                      </h3>
+                    </div>
+                    <span className="shrink-0 bg-gold text-primary-foreground px-3 py-1.5 text-sm font-semibold whitespace-nowrap">
+                      {p.price}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="p-5 border-t border-border">
-                <p className="flex gap-1 items-center text-[10px] tracking-[0.24em] text-slate-muted">
-                  <MapPin className="w-3 h-3 text-gold" />
-                  {p.location.toUpperCase()} · {p.type}
-                </p>
-                <h3 className="mt-2 text-lg font-bold leading-tight line-clamp-2 min-h-[3.25rem]">
-                  {p.name}
-                </h3>
-                <div className="mt-3 flex items-center justify-between">
-                  <Button asChild variant="link" className="px-0 text-xs tracking-[0.2em]">
-                    <Link to="/property/$id" params={{ id: p.id }}>
-                      Explore <ArrowUpRight />
+                <div className="flex items-center justify-between gap-3 px-4 py-3 border-t border-gold/10">
+                    <Link
+                      to="/property/$id"
+                      params={{ id: p.id }}
+                      className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.2em] uppercase text-gold hover:text-foreground transition-colors"
+                    >
+                      Explore <ArrowUpRight className="h-3 w-3" />
                     </Link>
-                  </Button>
-                  <Button asChild size="icon" variant="outline" title="WhatsApp enquiry">
                     <a
-                      href={`https://wa.me/919152383586?text=${encodeURIComponent(`Hi, please share details for ${p.name}.`)}`}
+                      href={`https://wa.me/919152383586?text=${encodeURIComponent(
+                        `Hi Mahadev Property, I'm interested in ${p.name} (${p.type}) — ${p.price}, ${p.location}. Please share details.`,
+                      )}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      tabIndex={duplicate ? -1 : undefined}
+                      className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.2em] uppercase text-slate-muted hover:text-gold transition-colors"
                       aria-label={`Enquire about ${p.name} on WhatsApp`}
-                      onClick={(e) => e.stopPropagation()}
                     >
-                      <MessageCircle />
+                      <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
                     </a>
-                  </Button>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-6 mt-8 flex items-center justify-center gap-4">
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label="Previous property"
-          onClick={() => advance(-1)}
-        >
-          <ChevronLeft />
-        </Button>
-        <div className="flex gap-2">
-          {items.map((p, i) => (
-            <Button
-              key={p.id}
-              variant="ghost"
-              size="icon"
-              className="w-7 h-9"
-              aria-label={`Go to property ${i + 1}`}
-              aria-current={i === index ? "true" : undefined}
-              onClick={() => setIndex(i)}
-            >
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${i === index ? "bg-gold" : "bg-muted-foreground/40"}`}
-              />
-            </Button>
-          ))}
-        </div>
-        <Button variant="outline" size="icon" aria-label="Next property" onClick={() => advance(1)}>
-          <ChevronRight />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={paused || reduced ? "Play carousel" : "Pause carousel"}
-          disabled={reduced}
-          onClick={() => setPaused((p) => !p)}
-        >
-          {paused || reduced ? <Play /> : <Pause />}
-        </Button>
       </div>
     </section>
   );

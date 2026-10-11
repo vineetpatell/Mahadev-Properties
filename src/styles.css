@@ -245,33 +245,14 @@
   z-index: 2;
   width: 100%;
 }
-/* SALE carousel — horizontal "magazine shelf" of portrait cards */
-.sale-shelf {
-  display: flex;
-  justify-content: center;
-  height: 560px;
+/* SALE carousel — infinite film strip: rounded landscape cards flowing left */
+.sale-marquee {
   overflow: hidden;
   touch-action: pan-y;
   position: relative;
 }
-.sale-shelf-track {
-  display: flex;
-  align-items: stretch;
-  gap: 1.5rem;
-  width: max-content;
-  height: 100%;
-  will-change: transform;
-}
-.shelf-slide {
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.sale-card {
-  flex: none;
-  width: 340px;
-  border-radius: 4px;
-}
-.sale-shelf::before,
-.sale-shelf::after {
+.sale-marquee::before,
+.sale-marquee::after {
   content: "";
   position: absolute;
   top: 0;
@@ -280,13 +261,34 @@
   z-index: 5;
   pointer-events: none;
 }
-.sale-shelf::before {
+.sale-marquee::before {
   left: 0;
   background: linear-gradient(90deg, var(--background), transparent);
 }
-.sale-shelf::after {
+.sale-marquee::after {
   right: 0;
   background: linear-gradient(270deg, var(--background), transparent);
+}
+.sale-marquee-track {
+  display: flex;
+  align-items: stretch;
+  gap: 1.25rem;
+  width: max-content;
+  will-change: transform;
+}
+.sale-marquee-card {
+  flex: none;
+  width: clamp(260px, 24vw, 380px);
+}
+
+/* OUR WORK PROCESS — cinematic band shared by Home (between the carousels) and About */
+.process-band {
+  position: relative;
+  background:
+    radial-gradient(90% 120% at 50% 0%, oklch(0.28 0.045 60 / 45%), transparent 60%),
+    linear-gradient(180deg, var(--background), oklch(0.16 0.02 55 / 60%), var(--background));
+  border-top: 1px solid color-mix(in oklab, var(--gold) 22%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--gold) 22%, transparent);
 }
 
 /* RENT carousel — dark bronze split rail (deliberately opposite of the SALE shelf) */
@@ -337,11 +339,12 @@
   .home-hero::after {
     background: linear-gradient(90deg, oklch(0.97 0.014 88 / 96%), oklch(0.97 0.014 88 / 48%));
   }
-  .sale-shelf {
-    height: 620px;
+  .sale-marquee-card {
+    width: 74vw;
   }
-  .sale-card {
-    width: 76vw;
+  .sale-marquee::before,
+  .sale-marquee::after {
+    width: 36px;
   }
   main .p-10 {
     padding: 1.5rem;

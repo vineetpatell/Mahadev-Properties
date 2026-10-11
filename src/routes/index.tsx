@@ -8,6 +8,7 @@ import { Ticker } from "../components/Ticker";
 import { Reveal, RevealItem } from "../components/Reveal";
 import { PropertyCarousel } from "../components/PropertyCarousel";
 import { RentCarousel } from "../components/RentCarousel";
+import { WorkProcess } from "../components/WorkProcess";
 import { ArchitecturalShowcase } from "../components/ArchitecturalShowcase";
 
 export const Route = createFileRoute("/")({
@@ -31,8 +32,9 @@ function HomePage() {
       <ArchitecturalShowcase />
       <Metrics />
       <Ticker reverse />
-      <PropertyCarousel />
       <RentCarousel />
+      <WorkProcess />
+      <PropertyCarousel />
       <ReviewsBoard />
     </Layout>
   );
@@ -66,7 +68,7 @@ function Hero() {
           </RevealItem>
           <RevealItem className="mt-14 grid grid-cols-3 max-w-md gap-6 border-t border-gold/10 pt-8">
             {[
-              { k: "12+", v: "Years Legacy" },
+              { k: "100%", v: "Title Verified" },
               { k: "480", v: "Units Delivered" },
               { k: "98%", v: "Client Trust" },
             ].map((s) => (

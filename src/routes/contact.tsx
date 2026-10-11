@@ -57,6 +57,19 @@ function ContactPage() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Send the briefing straight to WhatsApp with every field pre-filled.
+    const text =
+      `New enquiry from mahadevproperty.in\n\n` +
+      `Name: ${form.name}\n` +
+      `Email: ${form.email}\n` +
+      `Phone: ${form.phone}\n` +
+      `Service: ${form.service}\n` +
+      `Message: ${form.message}`;
+    window.open(
+      `https://wa.me/919152383586?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
     setSent(true);
     setTimeout(() => setSent(false), 3500);
     setForm({ name: "", email: "", phone: "", service: servicesList[0], message: "" });

@@ -79,11 +79,24 @@ function PropertyDetail() {
   const [submitted, setSubmitted] = useState(false);
 
   const whatsappUrl = `https://wa.me/919152383586?text=${encodeURIComponent(
-    `Hi Mahadev Property, I'm interested in ${p.name} (${p.type}) — ${p.price}. Please share details.`,
+    `Hi Mahadev Property, I'm interested in ${p.name} (${p.type}) — ${p.price}, ${p.location}. Please share details.`,
   )}`;
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Booking request goes straight to WhatsApp with all details pre-filled.
+    const text =
+      `Site visit request — mahadevproperty.in\n\n` +
+      `Property: ${p.name} (${p.type}) — ${p.price}\n` +
+      `Location: ${p.location}\n` +
+      `Name: ${form.name}\n` +
+      `Phone: ${form.phone}\n` +
+      `Preferred date: ${form.date}`;
+    window.open(
+      `https://wa.me/919152383586?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000);
     setForm({ name: "", phone: "", date: "" });

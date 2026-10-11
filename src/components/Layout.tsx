@@ -288,15 +288,36 @@ function Footer() {
         <div>
           <div className="text-[10px] tracking-[0.4em] text-gold mb-5">STUDIO</div>
           <ul className="space-y-3 text-sm text-slate-muted">
-            <li className="flex gap-3">
-              <MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /> P1, Deep Sadan Bldg, Sundar
-              Nagar, Malad West, Mumbai 400064
+            <li>
+              {/* Tapping the address opens Google Maps with the full address pre-filled. */}
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=P1%2C+Deep+Sadan+Bldg%2C+Sundar+Nagar%2C+Malad+West%2C+Mumbai+400064"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-3 hover:text-gold transition-colors"
+                aria-label="Open Mahadev Property address in Google Maps"
+              >
+                <MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /> P1, Deep Sadan Bldg, Sundar
+                Nagar, Malad West, Mumbai 400064
+              </a>
             </li>
-            <li className="flex gap-3">
-              <Phone className="h-4 w-4 text-gold shrink-0 mt-0.5" /> +91 91523 83586
+            <li>
+              <a
+                href="tel:+919152383586"
+                className="flex gap-3 hover:text-gold transition-colors"
+                aria-label="Call Mahadev Property"
+              >
+                <Phone className="h-4 w-4 text-gold shrink-0 mt-0.5" /> +91 91523 83586
+              </a>
             </li>
-            <li className="flex gap-3">
-              <Mail className="h-4 w-4 text-gold shrink-0 mt-0.5" /> mahadevproperties@gmail.com
+            <li>
+              <a
+                href="mailto:mahadevproperties@gmail.com?subject=Property%20enquiry%20%E2%80%94%20Mahadev%20Property&body=Hi%20Mahadev%20Property%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20properties.%0A%0AMy%20requirement%3A%20(e.g.%202BHK%20in%20Malad%20West)%0ABudget%3A%0APreferred%20move-in%3A%0A%0AThank%20you."
+                className="flex gap-3 hover:text-gold transition-colors"
+                aria-label="Email Mahadev Property"
+              >
+                <Mail className="h-4 w-4 text-gold shrink-0 mt-0.5" /> mahadevproperties@gmail.com
+              </a>
             </li>
           </ul>
         </div>
@@ -308,6 +329,22 @@ function Footer() {
             <li>GST · 27AAECM0000X1Z0</li>
             <li>CIN · U70100MH2015PTC000000</li>
           </ul>
+          <div className="mt-6 flex flex-col gap-2">
+            {[
+              { to: "/privacy-policy", label: "Privacy Policy" },
+              { to: "/terms-of-service", label: "Terms of Service" },
+              { to: "/gdpr-compliance", label: "GDPR Compliance" },
+            ].map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="gold-border px-4 py-2 text-[10px] tracking-[0.28em] text-gold hover:bg-gold/10 transition-colors text-center"
+                activeProps={{ className: "bg-gold/15" }}
+              >
+                {l.label.toUpperCase()}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
       <div className="border-t border-gold/10">

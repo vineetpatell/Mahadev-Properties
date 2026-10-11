@@ -4,6 +4,7 @@ import { Layout, Section } from "../components/Layout";
 import { Reveal, RevealItem } from "../components/Reveal";
 import { Faq } from "../components/Faq";
 import { ArchitecturalShowcase } from "../components/ArchitecturalShowcase";
+import { WorkProcess } from "../components/WorkProcess";
 import { properties } from "../lib/properties";
 import { OG_IMAGE, abs } from "../lib/seo";
 
@@ -264,6 +265,8 @@ function AboutPage() {
           </div>
         </Reveal>
       </Section>
+
+      <WorkProcess />
 
       <ArchitecturalShowcase />
 
