@@ -33,6 +33,7 @@ export function RentCarousel() {
   const [held, setHeld] = useState(false);
   const reduced = useReducedMotion() ?? false;
   const touch = useRef(0);
+  const resume = useRef(0);
   const active = rentals[index];
   const advance = (direction: number) =>
     setIndex((i) => (i + direction + rentals.length) % rentals.length);
@@ -43,6 +44,18 @@ export function RentCarousel() {
     return () => window.clearTimeout(timer);
   });
 
+  // Leaving the carousel shouldn't snap it back to motion instantly — wait a
+  // beat so a cursor just passing through doesn't restart the wipe abruptly.
+  const hold = () => {
+    window.clearTimeout(resume.current);
+    setHeld(true);
+  };
+  const release = () => {
+    window.clearTimeout(resume.current);
+    resume.current = window.setTimeout(() => setHeld(false), 2000);
+  };
+  useEffect(() => () => window.clearTimeout(resume.current), []);
+
   if (!active) return null;
 
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -52,11 +65,11 @@ export function RentCarousel() {
       aria-roledescription="carousel"
       aria-label="Featured rental properties"
       className="rent-band relative overflow-hidden py-14 md:py-20"
-      onMouseEnter={() => setHeld(true)}
-      onMouseLeave={() => setHeld(false)}
-      onFocusCapture={() => setHeld(true)}
+      onMouseEnter={hold}
+      onMouseLeave={release}
+      onFocusCapture={hold}
       onBlurCapture={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) setHeld(false);
+        if (!e.currentTarget.contains(e.relatedTarget)) release();
       }}
       onTouchStart={(e) => {
         touch.current = e.touches[0]?.clientX ?? 0;
@@ -76,8 +89,8 @@ export function RentCarousel() {
               Homes that wait for you.
             </h2>
             <p className="mt-3 max-w-md text-sm text-photo-foreground/70">
-              Furnished flats, shops and offices — immediate possession with
-              transparent monthly terms.
+              Furnished flats, shops and offices — immediate possession with transparent monthly
+              terms.
             </p>
           </div>
           <Button asChild variant="link" className="text-photo-foreground hover:text-gold">
@@ -98,15 +111,9 @@ export function RentCarousel() {
                 data-motion="skip"
                 className="absolute inset-0 h-full w-full object-cover"
                 initial={
-                  reduced
-                    ? { opacity: 0 }
-                    : { clipPath: "inset(0% 0% 0% 100%)", scale: 1.14 }
+                  reduced ? { opacity: 0 } : { clipPath: "inset(0% 0% 0% 100%)", scale: 1.14 }
                 }
-                animate={
-                  reduced
-                    ? { opacity: 1 }
-                    : { clipPath: "inset(0% 0% 0% 0%)", scale: 1.2 }
-                }
+                animate={reduced ? { opacity: 1 } : { clipPath: "inset(0% 0% 0% 0%)", scale: 1.2 }}
                 exit={
                   reduced
                     ? { opacity: 0 }

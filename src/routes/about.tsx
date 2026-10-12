@@ -3,7 +3,7 @@ import { Target, Eye, Award, Users, Building, Sparkles, ArrowUpRight } from "luc
 import { Layout, Section } from "../components/Layout";
 import { Reveal, RevealItem } from "../components/Reveal";
 import { Faq } from "../components/Faq";
-import { ArchitecturalShowcase } from "../components/ArchitecturalShowcase";
+import { AboutShowcase } from "../components/AboutShowcase";
 import { WorkProcess } from "../components/WorkProcess";
 import { properties } from "../lib/properties";
 import { OG_IMAGE, abs } from "../lib/seo";
@@ -109,9 +109,9 @@ function AboutPage() {
             </RevealItem>
             <RevealItem>
               <p className="mt-7 max-w-xl text-base text-slate-muted leading-relaxed font-light">
-                Mahadev Property is a real estate and property development studio for
-                residential, commercial and land assets — built on integrity,
-                professionalism and customer satisfaction, not on hard sells.
+                Mahadev Property is a real estate and property development studio for residential,
+                commercial and land assets — built on integrity, professionalism and customer
+                satisfaction, not on hard sells.
               </p>
             </RevealItem>
             <RevealItem className="mt-9 flex flex-wrap gap-4">
@@ -144,7 +144,10 @@ function AboutPage() {
                     { k: "Client trust", v: "98%" },
                     { k: "Operating principle", v: "Transparency" },
                   ].map((row) => (
-                    <div key={row.k} className="flex items-baseline justify-between gap-4 px-6 py-4">
+                    <div
+                      key={row.k}
+                      className="flex items-baseline justify-between gap-4 px-6 py-4"
+                    >
                       <dt className="text-[10px] tracking-[0.28em] text-slate-muted uppercase">
                         {row.k}
                       </dt>
@@ -169,17 +172,16 @@ function AboutPage() {
               </h2>
             </div>
             <p className="mt-8 text-sm md:text-base text-slate-muted leading-relaxed max-w-3xl">
-              Mahadev Property is a trusted real estate and property development company
-              committed to delivering quality residential, commercial, and land development
-              solutions. We specialize in property sales, purchases, investments, and
-              development, helping clients find the right opportunities with confidence and
-              transparency. Our focus is on developing and promoting well-planned projects
-              that offer long-term value, modern infrastructure, and excellent connectivity.
-              Whether it's residential plots, apartments, villas, commercial spaces, or
-              investment properties, we strive to provide reliable and customer-focused real
-              estate services. At Mahadev Property, we believe in integrity,
-              professionalism, and customer satisfaction. Our experienced team works closely
-              with clients to understand their needs and provide personalized guidance
+              Mahadev Property is a trusted real estate and property development company committed
+              to delivering quality residential, commercial, and land development solutions. We
+              specialize in property sales, purchases, investments, and development, helping clients
+              find the right opportunities with confidence and transparency. Our focus is on
+              developing and promoting well-planned projects that offer long-term value, modern
+              infrastructure, and excellent connectivity. Whether it's residential plots,
+              apartments, villas, commercial spaces, or investment properties, we strive to provide
+              reliable and customer-focused real estate services. At Mahadev Property, we believe in
+              integrity, professionalism, and customer satisfaction. Our experienced team works
+              closely with clients to understand their needs and provide personalized guidance
               throughout the buying, selling, or investment process.
             </p>
             <div className="absolute -bottom-16 -right-16 h-64 w-64 border border-gold/20 rotate-45" />
@@ -190,8 +192,8 @@ function AboutPage() {
             <div className="mt-6 text-[10px] tracking-[0.4em] text-gold">OUR MISSION</div>
             <p className="mt-4 text-sm text-foreground/90 leading-relaxed">
               To build trust through quality developments, transparent business practices, and
-              exceptional customer service while creating valuable real estate opportunities
-              for individuals and businesses.
+              exceptional customer service while creating valuable real estate opportunities for
+              individuals and businesses.
             </p>
             <div className="mt-6 h-px w-8 bg-gold group-hover:w-20 transition-all duration-500" />
           </RevealItem>
@@ -201,8 +203,8 @@ function AboutPage() {
             <div className="mt-6 text-[10px] tracking-[0.4em] text-gold">OUR VISION</div>
             <p className="mt-4 text-sm text-foreground/90 leading-relaxed">
               To become a leading and trusted name in the real estate industry by delivering
-              sustainable developments and helping clients achieve their property ownership
-              and investment goals.
+              sustainable developments and helping clients achieve their property ownership and
+              investment goals.
             </p>
             <div className="mt-6 h-px w-8 bg-gold group-hover:w-20 transition-all duration-500" />
           </RevealItem>
@@ -236,8 +238,8 @@ function AboutPage() {
             <div>
               <div className="text-[10px] tracking-[0.4em] text-gold">CORE PRINCIPLE</div>
               <div className="mt-2 text-xl md:text-2xl font-medium">
-                Integrity · Professionalism · Customer Satisfaction — the three axes we build
-                every project upon.
+                Integrity · Professionalism · Customer Satisfaction — the three axes we build every
+                project upon.
               </div>
             </div>
           </RevealItem>
@@ -268,7 +270,7 @@ function AboutPage() {
 
       <WorkProcess />
 
-      <ArchitecturalShowcase />
+      <AboutShowcase />
 
       {/* MOMENTS — life in the portfolio */}
       <Section className="py-24">
@@ -310,4 +312,3 @@ function AboutPage() {
     </Layout>
   );
 }
-

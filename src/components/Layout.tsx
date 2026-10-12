@@ -330,11 +330,13 @@ function Footer() {
             <li>CIN · U70100MH2015PTC000000</li>
           </ul>
           <div className="mt-6 flex flex-col gap-2">
-            {[
-              { to: "/privacy-policy", label: "Privacy Policy" },
-              { to: "/terms-of-service", label: "Terms of Service" },
-              { to: "/gdpr-compliance", label: "GDPR Compliance" },
-            ].map((l) => (
+            {(
+              [
+                { to: "/privacy-policy", label: "Privacy Policy" },
+                { to: "/terms-of-service", label: "Terms of Service" },
+                { to: "/gdpr-compliance", label: "GDPR Compliance" },
+              ] as const
+            ).map((l) => (
               <Link
                 key={l.to}
                 to={l.to}

@@ -245,6 +245,167 @@
   z-index: 2;
   width: 100%;
 }
+
+/* ============================================================
+   HOME CINEMATIC HERO — crossfading luxury scenes
+   Brand palette, scoped to the hero only (never global):
+     navy #142D4E · ivory #F5F2EB · champagne #B9975B · charcoal #24352D
+   ============================================================ */
+.home-hero-cin {
+  --hero-navy: #142d4e;
+  --hero-navy-deep: #0e1f38;
+  --hero-ivory: #f5f2eb;
+  --hero-champagne: #b9975b;
+  --hero-charcoal: #24352d;
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 620px;
+  /* Pull up under the fixed navbar so the scene bleeds to the very top. */
+  margin-top: -4rem;
+  overflow: hidden;
+  background: var(--hero-navy-deep);
+  color: var(--hero-ivory);
+}
+@media (min-width: 768px) {
+  .home-hero-cin {
+    min-height: min(88vh, 860px);
+  }
+}
+
+/* Crossfading backdrop fills the whole hero. */
+.hero-rotator {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-rotator-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.hero-rotator-bg-inner {
+  position: absolute;
+  inset: -20px; /* head-room so the pointer parallax never reveals an edge */
+  will-change: transform;
+}
+.hero-scene-layer {
+  position: absolute;
+  inset: 0;
+}
+.hero-scene-media {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.hero-scene-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-scene-fallback {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(120% 100% at 72% 18%, color-mix(in oklab, var(--hero-champagne) 24%, transparent), transparent 62%),
+    linear-gradient(160deg, var(--hero-navy), var(--hero-charcoal));
+}
+/* Navy scrim — keeps overlaid copy readable on any photo, both orientations. */
+.hero-scene-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg,
+      color-mix(in oklab, var(--hero-navy-deep) 90%, transparent) 0%,
+      color-mix(in oklab, var(--hero-navy-deep) 66%, transparent) 40%,
+      color-mix(in oklab, var(--hero-navy-deep) 12%, transparent) 72%,
+      transparent 100%),
+    linear-gradient(0deg,
+      color-mix(in oklab, var(--hero-navy-deep) 45%, transparent),
+      transparent 40%);
+}
+@media (max-width: 767px) {
+  .hero-scene-scrim {
+    background: linear-gradient(0deg,
+      color-mix(in oklab, var(--hero-navy-deep) 92%, transparent) 6%,
+      color-mix(in oklab, var(--hero-navy-deep) 58%, transparent) 52%,
+      color-mix(in oklab, var(--hero-navy-deep) 28%, transparent) 100%);
+  }
+}
+
+/* Foreground content sits above the backdrop and is vertically centred. */
+.home-hero-cin-inner {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  width: 100%;
+  padding-top: 5.5rem; /* clear the fixed navbar */
+  padding-bottom: 4.5rem;
+}
+
+/* High-contrast ink on the dark scene. */
+.hero-ink {
+  color: var(--hero-ivory);
+}
+.hero-ink-soft {
+  color: color-mix(in oklab, var(--hero-ivory) 84%, transparent);
+}
+.hero-ink-muted {
+  color: color-mix(in oklab, var(--hero-ivory) 68%, transparent);
+}
+
+/* Scene indicator 01/05 … 05/05 with per-scene progress fill. */
+.hero-rotator-indicator {
+  position: absolute;
+  z-index: 3;
+  top: 5.25rem; /* just under the navbar on mobile */
+  right: max(1.5rem, calc((100vw - 80rem) / 2));
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .hero-rotator-indicator {
+    top: auto;
+    bottom: 2.5rem;
+  }
+}
+.hero-rotator-count {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  color: var(--hero-ivory);
+  font-variant-numeric: tabular-nums;
+}
+.hero-rotator-count-sep {
+  margin: 0 0.35em;
+  opacity: 0.45;
+}
+.hero-rotator-bars {
+  display: flex;
+  gap: 0.4rem;
+}
+.hero-rotator-bar {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--hero-ivory) 30%, transparent);
+}
+.hero-rotator-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: block;
+  width: 0%;
+  background: var(--hero-champagne);
+}
+
 /* SALE carousel — infinite film strip: rounded landscape cards flowing left */
 .sale-marquee {
   overflow: hidden;
@@ -332,6 +493,193 @@
 .blueprint-photo:hover .blueprint-layer {
   opacity: 0;
 }
+/* ABOUT SHOWCASE — "Living Elevated": a cream + navy horizontal walkthrough.
+   Mirrors the Home first carousel (ArchitecturalShowcase) — pinned glide with
+   the blueprint-photo hover effect — but scoped to its own cream/navy palette
+   so the global theme is never touched. */
+.about-showcase {
+  --about-cream: oklch(0.965 0.014 88);
+  --about-cream-2: oklch(0.94 0.02 84);
+  --about-navy: oklch(0.28 0.06 258);
+  --about-navy-2: oklch(0.22 0.05 262);
+  --about-navy-soft: color-mix(in oklab, var(--about-navy) 72%, var(--about-cream));
+  --about-line: color-mix(in oklab, var(--about-navy) 22%, transparent);
+  --about-accent: oklch(0.72 0.13 82);
+
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 88% 4%, oklch(0.9 0.03 84 / 70%), transparent 60%),
+    linear-gradient(180deg, var(--about-cream), var(--about-cream-2));
+  color: var(--about-navy);
+  border-top: 1px solid var(--about-line);
+  border-bottom: 1px solid var(--about-line);
+}
+.about-showcase-head {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 0;
+}
+.about-showcase-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--about-accent) 70%, var(--about-navy));
+}
+.about-showcase-title {
+  margin-top: 0.85rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  color: var(--about-navy);
+}
+.about-showcase-intro {
+  margin-top: 1rem;
+  max-width: 42rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: color-mix(in oklab, var(--about-navy) 78%, var(--about-cream));
+}
+.about-showcase-track {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  padding: 0 1.5rem 4.5rem;
+}
+.about-showcase-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.about-showcase-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  aspect-ratio: 21 / 9;
+  border: 1px solid var(--about-line);
+  background: var(--about-navy-2);
+}
+.about-showcase-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+/* Cream-tinted blueprint grid so the hover effect matches the About palette. */
+.about-showcase-frame .blueprint-layer {
+  background-color: color-mix(in oklab, var(--about-navy) 40%, transparent);
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--about-cream) 38%, transparent) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--about-cream) 38%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 44px 44px;
+}
+.about-showcase-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--about-navy-2) 55%, transparent),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+.about-showcase-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 32rem;
+}
+.about-showcase-index {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  color: color-mix(in oklab, var(--about-accent) 85%, var(--about-navy));
+}
+.about-showcase-kicker--panel {
+  letter-spacing: 0.32em;
+}
+.about-showcase-panel-title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  color: var(--about-navy);
+}
+.about-showcase-featured {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--about-accent) 78%, var(--about-navy));
+}
+.about-showcase-blurb {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  font-weight: 300;
+  color: color-mix(in oklab, var(--about-navy) 78%, var(--about-cream));
+}
+.about-showcase-cta {
+  margin-top: 0.5rem;
+}
+.about-showcase-cta button {
+  border-color: color-mix(in oklab, var(--about-navy) 35%, transparent);
+  color: var(--about-navy);
+}
+.about-showcase-cta button:hover {
+  border-color: var(--about-accent);
+  color: color-mix(in oklab, var(--about-accent) 85%, var(--about-navy));
+}
+
+/* Desktop — pinned horizontal walkthrough. Each panel is a fixed, full-height
+   slide so the GSAP `containerAnimation` walk maps cleanly to scroll distance. */
+@media (min-width: 1024px) {
+  .about-showcase-track {
+    gap: 3.5rem;
+    padding: 0 max(1.5rem, calc((100vw - 80rem) / 2)) 4rem;
+    will-change: transform;
+  }
+  .about-showcase-panel {
+    flex: 0 0 auto;
+    width: min(78vw, 70rem);
+    height: calc(100vh - 15rem);
+    justify-content: center;
+  }
+  .about-showcase-frame {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+  .about-showcase-copy {
+    max-width: 40rem;
+  }
+}
+
+/* Tablet — swipeable snap rail (matches the Home walkthrough's tablet feel). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .about-showcase-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .about-showcase-panel {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+}
+
+/* Mobile — calm vertical stack; frames relax to a taller cinematic ratio. */
+@media (max-width: 767px) {
+  .about-showcase-track {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .about-showcase-frame {
+    aspect-ratio: 16 / 10;
+  }
+}
+
 @media (max-width: 767px) {
   .home-hero {
     min-height: 610px;

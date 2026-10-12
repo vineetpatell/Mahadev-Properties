@@ -136,9 +136,8 @@ export function PropertyCarousel() {
               <article
                 key={`${p.id}-${duplicate ? "dup" : "orig"}`}
                 aria-hidden={duplicate || undefined}
-                className={`sale-marquee-card group relative overflow-hidden rounded-2xl border border-gold/15 hover:border-gold/50 transition-colors ${
-                  duplicate ? "[&_a]:pointer-events-none" : ""
-                }`}
+                inert={duplicate || undefined}
+                className="sale-marquee-card group relative overflow-hidden rounded-2xl border border-gold/15 hover:border-gold/50 transition-colors"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
