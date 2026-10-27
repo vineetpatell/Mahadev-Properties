@@ -256,40 +256,50 @@ function Navbar() {
 }
 
 function Footer() {
+  const year = new Date().getFullYear();
   return (
     <footer className="relative z-10 mt-10 mx-3 md:mx-6 mb-4 rounded-[2.5rem] border border-gold/20 bg-card/85 backdrop-blur-xl overflow-hidden shadow-[0_-14px_50px_-24px_color-mix(in_oklab,var(--foreground)_28%,transparent)]">
       <div
         className="h-1 w-full bg-gradient-to-r from-transparent via-gold to-transparent"
         aria-hidden="true"
       />
-      <div className="mx-auto max-w-7xl px-6 py-16 grid gap-12 md:grid-cols-4">
-        <div>
+      <div className="mx-auto max-w-7xl px-6 pt-16 pb-10 grid gap-12 lg:grid-cols-12">
+        {/* Brand + promise */}
+        <div className="lg:col-span-4">
           <Brand large />
-          <p className="mt-6 text-sm text-slate-muted leading-relaxed">
-            A trusted real estate & development studio building transparent, long-term value across
-            Mumbai.
+          <p className="mt-6 max-w-sm text-sm text-slate-muted leading-relaxed">
+            A trusted real estate &amp; development studio building transparent, long-term value
+            across Mumbai — residential, commercial and land.
           </p>
+          <a
+            href="https://wa.me/919152383586"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-7 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-xs font-medium tracking-[0.22em] uppercase text-primary-foreground shadow hover:bg-gold-muted transition-colors"
+          >
+            <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
+          </a>
         </div>
-        <div>
+
+        {/* Navigate */}
+        <nav className="lg:col-span-2" aria-label="Footer navigation">
           <div className="text-[10px] tracking-[0.4em] text-gold mb-5">NAVIGATE</div>
           <ul className="space-y-3 text-sm">
             {nav.map((n) => (
               <li key={`${n.to}-${n.label}`}>
-                <Link
-                  to={n.to}
-                  className="text-slate-muted hover:text-foreground transition-colors"
-                >
+                <Link to={n.to} className="text-slate-muted hover:text-gold transition-colors">
                   {"parent" in n ? `${n.parent} — ${n.label}` : n.label}
                 </Link>
               </li>
             ))}
           </ul>
-        </div>
-        <div>
+        </nav>
+
+        {/* Studio contact */}
+        <div className="lg:col-span-3">
           <div className="text-[10px] tracking-[0.4em] text-gold mb-5">STUDIO</div>
-          <ul className="space-y-3 text-sm text-slate-muted">
+          <ul className="space-y-4 text-sm text-slate-muted">
             <li>
-              {/* Tapping the address opens Google Maps with the full address pre-filled. */}
               <a
                 href="https://www.google.com/maps/search/?api=1&query=P1%2C+Deep+Sadan+Bldg%2C+Sundar+Nagar%2C+Malad+West%2C+Mumbai+400064"
                 target="_blank"
@@ -312,38 +322,40 @@ function Footer() {
             </li>
             <li>
               <a
-                href="mailto:mahadevproperties@gmail.com?subject=Property%20enquiry%20%E2%80%94%20Mahadev%20Property&body=Hi%20Mahadev%20Property%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20properties.%0A%0AMy%20requirement%3A%20(e.g.%202BHK%20in%20Malad%20West)%0ABudget%3A%0APreferred%20move-in%3A%0A%0AThank%20you."
+                href="mailto:info@mahadevproperties.co.in"
                 className="flex gap-3 hover:text-gold transition-colors"
                 aria-label="Email Mahadev Property"
               >
-                <Mail className="h-4 w-4 text-gold shrink-0 mt-0.5" /> mahadevproperties@gmail.com
+                <Mail className="h-4 w-4 text-gold shrink-0 mt-0.5" /> info@mahadevproperties.co.in
               </a>
             </li>
           </ul>
         </div>
-        <div>
+
+        {/* Compliance + legal */}
+        <div className="lg:col-span-3">
           <div className="text-[10px] tracking-[0.4em] text-gold mb-5">COMPLIANCE</div>
-          <ul className="space-y-3 text-sm text-slate-muted">
+          <ul className="space-y-2.5 text-sm text-slate-muted">
             <li>MahaRERA Registered Developer</li>
             <li>ISO 9001:2015 Aligned Practices</li>
             <li>GST · 27AAECM0000X1Z0</li>
             <li>CIN · U70100MH2015PTC000000</li>
           </ul>
-          <div className="mt-6 flex flex-col gap-2">
+          <div className="mt-6 flex flex-wrap gap-2">
             {(
               [
-                { to: "/privacy-policy", label: "Privacy Policy" },
-                { to: "/terms-of-service", label: "Terms of Service" },
-                { to: "/gdpr-compliance", label: "GDPR Compliance" },
+                { to: "/privacy-policy", label: "Privacy" },
+                { to: "/terms-of-service", label: "Terms" },
+                { to: "/gdpr-compliance", label: "GDPR" },
               ] as const
             ).map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
-                className="gold-border px-4 py-2 text-[10px] tracking-[0.28em] text-gold hover:bg-gold/10 transition-colors text-center"
-                activeProps={{ className: "bg-gold/15" }}
+                className="rounded-full border border-gold/40 px-4 py-1.5 text-[10px] tracking-[0.24em] uppercase text-gold hover:bg-gold/10 hover:border-gold transition-colors"
+                activeProps={{ className: "bg-gold/15 border-gold" }}
               >
-                {l.label.toUpperCase()}
+                {l.label}
               </Link>
             ))}
           </div>
@@ -351,9 +363,9 @@ function Footer() {
       </div>
       <div className="border-t border-gold/10">
         <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col md:flex-row justify-between gap-3 text-xs tracking-[0.22em] text-slate-muted">
-          <span>© {new Date().getFullYear()} MAHADEV PROPERTY · ALL RIGHTS RESERVED</span>
+          <span>© {year} MAHADEV PROPERTY · ALL RIGHTS RESERVED</span>
           <span>
-            DESIGNED & DEVELOPED BY{" "}
+            DESIGNED &amp; DEVELOPED BY{" "}
             <a
               href="https://neverendingservices.com"
               target="_blank"

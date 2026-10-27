@@ -1,11 +1,10 @@
 import { useEffect, useLayoutEffect } from "react";
 import { useRouter, useRouterState } from "@tanstack/react-router";
-import { getGsap, killTriggersFor, motionOk } from "../lib/motion";
+import { getGsap, motionOk } from "../lib/motion";
 
 // Pre-paint effect on the client (no flash of un-hidden content),
 // plain effect during SSR.
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function MotionDirector() {
   const router = useRouter();
@@ -55,9 +54,7 @@ export function MotionDirector() {
       // Cinematic image reveal — curtain wipe. Heavy listing-grid and carousel
       // images opt out via data-motion="skip" to keep scroll buttery.
       gsap.utils
-        .toArray<HTMLImageElement>(
-          "main img:not([data-carousel-image]):not([data-motion='skip'])",
-        )
+        .toArray<HTMLImageElement>("main img:not([data-carousel-image]):not([data-motion='skip'])")
         .forEach((el) => {
           gsap.fromTo(
             el,
@@ -99,7 +96,15 @@ export function MotionDirector() {
           ),
         );
     });
-    ScrollTrigger.refresh();
+    // Refresh AFTER paint and again once images/fonts settle. On client-side
+    // navigation the new route's images load *after* this layout effect runs,
+    // so a single synchronous refresh measures an unstable layout — leaving
+    // headings stuck in their clipped start-state until a hard refresh. Deferring
+    // the refresh (and repeating it on window "load") fixes that.
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+    const settleRefresh = window.setTimeout(() => ScrollTrigger.refresh(), 400);
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", onLoad);
 
     let cleanupLenis: (() => void) | undefined;
     let cancelled = false;
@@ -126,9 +131,16 @@ export function MotionDirector() {
     return () => {
       cancelled = true;
       cleanupLenis?.();
+      window.clearTimeout(settleRefresh);
+      window.removeEventListener("load", onLoad);
+      // ctx.revert() reverts EXACTLY the triggers this effect created (they all
+      // live inside gsap.context). We must NOT blanket-kill every ScrollTrigger
+      // under <main> here: on SPA navigation the new route's components (e.g.
+      // AboutShowcase's pinned walkthrough) mount and build their triggers
+      // BEFORE resolvedLocation.href updates, so a broad kill would destroy
+      // their just-created pins — leaving sections stuck until a hard refresh.
       ctx.revert();
       preferenceQuery.removeEventListener("change", preferenceChanged);
-      killTriggersFor(document.querySelector("main"));
     };
   }, [key]);
   return null;

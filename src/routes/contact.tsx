@@ -173,8 +173,8 @@ function ContactPage() {
               <ContactRow
                 icon={Mail}
                 label="EMAIL"
-                value="mahadevproperties@gmail.com"
-                href="mailto:mahadevproperties@gmail.com"
+                value="info@mahadevproperties.co.in"
+                href="mailto:info@mahadevproperties.co.in"
               />
               <ContactRow
                 icon={MapPin}

@@ -48,7 +48,7 @@ const PRINCIPLES: { title: string; body: string }[] = [
   },
   {
     title: "Accountability",
-    body: "We can, on request, tell you exactly what data we hold about you and correct or erase it — email mahadevproperties@gmail.com.",
+    body: "We can, on request, tell you exactly what data we hold about you and correct or erase it — email info@mahadevproperties.co.in.",
   },
 ];
 
@@ -129,10 +129,10 @@ function GdprCompliancePage() {
                 <p className="mt-3 max-w-xl text-sm text-slate-muted leading-relaxed">
                   Email{" "}
                   <a
-                    href="mailto:mahadevproperties@gmail.com?subject=GDPR%20data%20request&body=I%20would%20like%20to%20request%3A%20(access%20%2F%20correction%20%2F%20erasure)%0A%0AName%3A%0APhone%20used%20for%20enquiry%3A"
+                    href="mailto:info@mahadevproperties.co.in?subject=GDPR%20data%20request&body=I%20would%20like%20to%20request%3A%20(access%20%2F%20correction%20%2F%20erasure)%0A%0AName%3A%0APhone%20used%20for%20enquiry%3A"
                     className="text-gold hover:text-foreground transition-colors"
                   >
-                    mahadevproperties@gmail.com
+                    info@mahadevproperties.co.in
                   </a>{" "}
                   with the subject “GDPR data request”, or call{" "}
                   <a
@@ -145,7 +145,7 @@ function GdprCompliancePage() {
                 </p>
               </div>
               <a
-                href="mailto:mahadevproperties@gmail.com?subject=GDPR%20data%20request&body=I%20would%20like%20to%20request%3A%20(access%20%2F%20correction%20%2F%20erasure)%0A%0AName%3A%0APhone%20used%20for%20enquiry%3A"
+                href="mailto:info@mahadevproperties.co.in?subject=GDPR%20data%20request&body=I%20would%20like%20to%20request%3A%20(access%20%2F%20correction%20%2F%20erasure)%0A%0AName%3A%0APhone%20used%20for%20enquiry%3A"
                 className="gold-border px-6 py-3 text-xs tracking-[0.28em] text-gold hover:bg-gold/10 transition-colors whitespace-nowrap"
               >
                 SEND REQUEST

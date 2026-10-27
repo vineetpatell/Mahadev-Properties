@@ -70,7 +70,7 @@ const SECTIONS: { title: string; body: string[] }[] = [
   {
     title: "7. Your rights",
     body: [
-      "You can ask us what information we hold about you, request corrections, or ask us to delete it — email mahadevproperties@gmail.com or call +91 91523 83586 and we will act on verified requests promptly.",
+      "You can ask us what information we hold about you, request corrections, or ask us to delete it — email info@mahadevproperties.co.in or call +91 91523 83586 and we will act on verified requests promptly.",
     ],
   },
   {
@@ -127,10 +127,10 @@ function PrivacyPolicyPage() {
                 <p className="mt-4 text-sm text-slate-muted leading-relaxed">
                   Write to us at{" "}
                   <a
-                    href="mailto:mahadevproperties@gmail.com?subject=Privacy%20policy%20question"
+                    href="mailto:info@mahadevproperties.co.in?subject=Privacy%20policy%20question"
                     className="text-gold hover:text-foreground transition-colors"
                   >
-                    mahadevproperties@gmail.com
+                    info@mahadevproperties.co.in
                   </a>{" "}
                   or call{" "}
                   <a

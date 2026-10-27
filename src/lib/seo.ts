@@ -12,7 +12,7 @@ export const abs = (path: string) => `${SITE_URL}${path.startsWith("/") ? path :
 export const BUSINESS = {
   name: "Mahadev Property",
   phone: "+91 91523 83586",
-  email: "mahadevproperties@gmail.com",
+  email: "info@mahadevproperties.co.in",
   address: "P1, Deep Sadan Bldg, Sundar Nagar, Malad West, Mumbai 400064",
   locality: "Malad West",
   city: "Mumbai",

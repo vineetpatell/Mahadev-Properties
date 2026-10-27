@@ -154,7 +154,7 @@ export const faqsByPage: Record<FaqPageKey, FaqEntry[]> = {
     },
     {
       q: "Email par documents bhej sakte hain?",
-      a: "Haan — mahadevproperties@gmail.com par requirement ya property papers bhejo, team review karke callback karti hai.",
+      a: "Haan — info@mahadevproperties.co.in par requirement ya property papers bhejo, team review karke callback karti hai.",
     },
   ],
 };

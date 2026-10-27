@@ -88,7 +88,7 @@ const SECTIONS: { title: string; body: string[] }[] = [
   {
     title: "10. Contact",
     body: [
-      "Questions about these terms: mahadevproperties@gmail.com or +91 91523 83586. Registered office: P1, Deep Sadan Bldg, Sundar Nagar, Malad West, Mumbai 400064.",
+      "Questions about these terms: info@mahadevproperties.co.in or +91 91523 83586. Registered office: P1, Deep Sadan Bldg, Sundar Nagar, Malad West, Mumbai 400064.",
     ],
   },
 ];
@@ -139,10 +139,10 @@ function TermsOfServicePage() {
                 <p className="mt-4 text-sm text-slate-muted leading-relaxed">
                   Talk to us before you commit —{" "}
                   <a
-                    href="mailto:mahadevproperties@gmail.com?subject=Question%20about%20terms%20of%20service"
+                    href="mailto:info@mahadevproperties.co.in?subject=Question%20about%20terms%20of%20service"
                     className="text-gold hover:text-foreground transition-colors"
                   >
-                    mahadevproperties@gmail.com
+                    info@mahadevproperties.co.in
                   </a>{" "}
                   or{" "}
                   <a

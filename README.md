@@ -33,4 +33,5 @@ npm run preview
 
 - Address: P1, Deep Sadan Bldg, Sundar Nagar, Malad West, Mumbai 400064
 - Phone: [+91 91523 83586](tel:+919152383586)
-- Email: [mahadevproperties@gmail.com](mailto:mahadevproperties@gmail.com)
+- Email: [info@mahadevproperties.co.in](mailto:info@mahadevproperties.co.in)
+ 
